@@ -2,6 +2,8 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 import { HOST, MQTT_PORT, MQTT_USER_ID, MQTT_USER_PW } from "./const/env.const";
+import { HttpModule } from "./http.module";
+import { NestExpressApplication } from "@nestjs/platform-express";
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
@@ -9,10 +11,13 @@ async function bootstrap() {
     options: {
       url: `mqtt://${HOST}:${MQTT_PORT}`,
       username: MQTT_USER_ID,
-      password: MQTT_USER_PW,
+      password: MQTT_USER_PW
     }
   });
   app.listen();
+
+  const httpApp = await NestFactory.create<NestExpressApplication>(HttpModule);
+  await httpApp.listen(3000);
 }
 
 bootstrap();
