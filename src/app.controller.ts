@@ -6,6 +6,7 @@ import {
   Payload,
 } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { MQTT_TOPIC } from "./const/env.const";
 
 @Controller()
 export class AppController {
@@ -19,8 +20,8 @@ export class AppController {
    * @param data : 페이로드
    * @param context : 토픽
    */
-  @MessagePattern('DreamFarm/Controller')
-  getNotifications(@Payload() data: any, @Ctx() context: MqttContext) {
-    return this.appService.getDataByTopic(data, context);
+  @MessagePattern(`${MQTT_TOPIC}`)
+  getNotifications(@Payload() data: any) {
+    return this.appService.getDataByTopic(data);
   }
 }

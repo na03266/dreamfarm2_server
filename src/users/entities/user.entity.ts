@@ -11,15 +11,17 @@ export class UsersModel extends BaseModel {
     unique: true,
   })
   email: string;
+  @Column()
+  password: string;
 
   @Column()
   name: string;
 
   @Column()
-  password: string;
+  phoneNumber: string;
 
   @Column()
-  phoneNumber: string;
+  address: string;
 
   @Column({
     enum: Object.values(RolesEnum),
