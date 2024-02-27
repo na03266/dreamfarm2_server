@@ -4,6 +4,7 @@
 
 #Const
 /src/const
+/docker-compose
 
 # Logs
 logs
