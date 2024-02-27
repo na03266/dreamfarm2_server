@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { MqttContext } from "@nestjs/microservices";
+import { MqttContext } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
-
   /**
    * 페이로드 값을 반환하는 함수
    * @param data
    * @param context
    */
-  getDataByTopic(data:any, context: MqttContext ){
+  getDataByTopic(data: any, context: MqttContext) {
     console.log(`Topic: ${context.getTopic()}`);
 
     // data 타입 및 내용 확인을 위한 로깅
