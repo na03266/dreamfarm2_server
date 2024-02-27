@@ -1,14 +1,14 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
-import { BaseModel } from "../../common/entyity/base.entity";
-import { RolesEnum } from "../const/roles.const";
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseModel } from '../../common/entyity/base.entity';
+import { RolesEnum } from '../const/roles.const';
 
 @Entity()
-export class UserModel extends BaseModel {
+export class UsersModel extends BaseModel {
   @PrimaryColumn()
   userId: string;
 
   @Column({
-    unique: true
+    unique: true,
   })
   email: string;
 
@@ -23,7 +23,7 @@ export class UserModel extends BaseModel {
 
   @Column({
     enum: Object.values(RolesEnum),
-    default: RolesEnum.USER
+    default: RolesEnum.USER,
   })
   role: RolesEnum;
 }
