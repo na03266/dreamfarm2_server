@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { BaseModel } from '../../common/entyity/base.entity';
 import { RolesEnum } from '../const/roles.const';
+import { ControllerModel } from '../../controller/entities/controller.entity';
 
 @Entity()
 export class UsersModel extends BaseModel {
@@ -35,4 +36,7 @@ export class UsersModel extends BaseModel {
     default: RolesEnum.USER,
   })
   role: RolesEnum;
+
+  @OneToMany(() => ControllerModel, (controller) => controller.controllerId)
+  controllers: ControllerModel[];
 }
