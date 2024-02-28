@@ -11,16 +11,23 @@ export class UsersModel extends BaseModel {
     unique: true,
   })
   userEmail: string;
+
   @Column()
   password: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   name: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   phoneNumber: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   address: string;
 
   @Column({

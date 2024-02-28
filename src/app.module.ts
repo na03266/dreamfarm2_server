@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
+import { UsersModel } from "./users/entities/user.entity";
 
 const clients = ClientsModule.register([
   {
@@ -33,7 +34,7 @@ const clients = ClientsModule.register([
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [],
+      entities: [UsersModel],
       synchronize: true,
     }),
     AuthModule,

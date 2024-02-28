@@ -10,7 +10,9 @@ export class UsersService {
     private readonly userRepository: Repository<UsersModel>,
   ) {}
 
-  async createUser(user: Pick<UsersModel, 'userEmail' | 'userId' | 'password'>) {
+  async createUser(
+    user: Pick<UsersModel, 'userEmail' | 'userId' | 'password'>,
+  ) {
     const idExists = await this.userRepository.exists({
       where: {
         userId: user.userId,
@@ -31,13 +33,17 @@ export class UsersService {
     }
 
     const userObj = this.userRepository.create({
-      userId:user.userId,
+      userId: user.userId,
       userEmail: user.userEmail,
-      password:user.password
-    })
+      password: user.password,
+    });
 
-    const newUser = await this.userRepository.save(user)
+    const newUser = await this.userRepository.save(user);
 
     return newUser;
+  }
+
+  async getAllUser(){
+    return this.userRepository.find();
   }
 }
