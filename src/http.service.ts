@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 export class HttpService {
   constructor(@Inject('MY_MQTT_SERVICE') private client: ClientProxy) {}
 
-  async pubTopic(@Req() req: Request, @Res() res: Response) {
+  async postWithPublish(@Req() req: Request, @Res() res: Response) {
     // GET 방식으로 데이터를 받아서 처리
     console.log(req.query);
     await this.client

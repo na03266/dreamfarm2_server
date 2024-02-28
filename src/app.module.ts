@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModel } from "./users/entities/user.entity";
+import { ControllerModule } from './controller/controller.module';
 
 const clients = ClientsModule.register([
   {
@@ -38,6 +39,7 @@ const clients = ClientsModule.register([
       synchronize: true,
     }),
     AuthModule,
+    ControllerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

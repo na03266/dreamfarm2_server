@@ -29,6 +29,6 @@ export class HttpController {
   // }
   @Post('web')
   async handleGetRequest(@Req() req: Request, @Res() res: Response) {
-    return this.httpService.pubTopic(req, res);
+    return this.httpService.postWithPublish(req, res);
   }
 }

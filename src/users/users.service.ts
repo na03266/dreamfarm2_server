@@ -10,6 +10,9 @@ export class UsersService {
     private readonly userRepository: Repository<UsersModel>,
   ) {}
 
+  /**
+   * 사용자 계정 생성(임시) auth기능 연동해야함.
+   */
   async createUser(
     user: Pick<UsersModel, 'userEmail' | 'userId' | 'password'>,
   ) {
@@ -43,6 +46,9 @@ export class UsersService {
     return newUser;
   }
 
+  /**
+   * 모든 사용자 정보 불러오기
+   */
   async getAllUser(){
     return this.userRepository.find();
   }

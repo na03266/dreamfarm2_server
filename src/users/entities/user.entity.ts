@@ -16,17 +16,17 @@ export class UsersModel extends BaseModel {
   password: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   name: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   phoneNumber: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   address: string;
 
