@@ -7,8 +7,11 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModel } from "./users/entities/user.entity";
+import { UsersModel } from "./users/entities/users.entity";
 import { ControllerModule } from './controller/controller.module';
+import { ControllersModel } from "./controller/entities/controllers.entity";
+import { SensorModule } from './sensor/sensor.module';
+import { UnitModule } from './unit/unit.module';
 
 const clients = ClientsModule.register([
   {
@@ -35,11 +38,13 @@ const clients = ClientsModule.register([
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [UsersModel],
+      entities: [UsersModel, ControllersModel],
       synchronize: true,
     }),
     AuthModule,
     ControllerModule,
+    SensorModule,
+    UnitModule,
   ],
   controllers: [AppController],
   providers: [AppService],

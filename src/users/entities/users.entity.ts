@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { BaseModel } from '../../common/entyity/base.entity';
 import { RolesEnum } from '../const/roles.const';
-import { ControllerModel } from '../../controller/entities/controller.entity';
+import { ControllersModel } from '../../controller/entities/controllers.entity';
 
 @Entity()
 export class UsersModel extends BaseModel {
@@ -24,7 +24,7 @@ export class UsersModel extends BaseModel {
   @Column({
     nullable: true,
   })
-  phoneNumber: string;
+  phone: string;
 
   @Column({
     nullable: true,
@@ -37,6 +37,6 @@ export class UsersModel extends BaseModel {
   })
   role: RolesEnum;
 
-  @OneToMany(() => ControllerModel, (controller) => controller.controllerId)
-  controllers: ControllerModel[];
+  @OneToMany(() => ControllersModel, (controller) => controller.user)
+  controllers: ControllersModel[];
 }

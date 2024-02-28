@@ -1,15 +1,15 @@
 # Database Design
+
 ```mermaid
 erDiagram
     USER ||--o{ USER_CONTROLLERS: "has"
-   USER_CONTROLLERS ||--o{ CTRL_SETTING: "환경 구성"
-   USER_CONTROLLERS ||--o{ UNIT_SETTING: "환경 구성"
-   USER_CONTROLLERS ||--o{ SENSOR_SETTING: "환경 구성"
-   USER_CONTROLLERS ||--o{ UNIT_STATUS: "모니터링"
-   USER_CONTROLLERS ||--o{ SENSOR_DATA: "모니터링"
-   SENSOR_SETTING ||--|| SENSOR_DATA: "관련"
-   UNIT_SETTING ||--|| UNIT_STATUS: "관련"
-
+    USER_CONTROLLERS ||--o{ CTRL_SETTING: "환경 구성"
+    USER_CONTROLLERS ||--o{ UNIT_SETTING: "환경 구성"
+    USER_CONTROLLERS ||--o{ SENSOR_SETTING: "환경 구성"
+    USER_CONTROLLERS ||--o{ UNIT_STATUS: "모니터링"
+    USER_CONTROLLERS ||--o{ SENSOR_DATA: "모니터링"
+    SENSOR_SETTING ||--|| SENSOR_DATA: "관련"
+    UNIT_SETTING ||--|| UNIT_STATUS: "관련"
 
     USER {
         string userId "사용자 ID"
@@ -70,39 +70,46 @@ erDiagram
     }
 ```
 
+### 1. user_model
 
-### 1. USER
+| 컬럼명       | 자료형    | 설명     | 비고 |
+|-----------|--------|--------|----|
+| userId    | string | 사용자 ID | PK |
+| userEmail | string | 이메일    |    |
+| password  | string | 비밀번호   |    |
+| name      | string | 이름     |    |
+| phone     | string | 전화번호   |    |  
+| address   | string | 전화번호   |    |  
+| role      | string | 권한     |    |  
+| updatedAt | string | 갱신 일   |    |  
+| createdAt | string | 생성 일   |    |  
 
-| 컬럼명         | 자료형    | 설명     | 비고 |
-|-------------|--------|--------|----|
-| userId      | string | 사용자 ID | PK |
-| password    | string | 비밀번호   |    |
-| name        | string | 이름     |    |
-| email       | string | 이메일    |    |
-| phoneNumber | string | 전화번호   |    |  
-| authority  | string | 권한     |    |  
+### 2. controller_model
 
-### 2. USER_CONTROLLERS
+| 컬럼명          | 자료형    | 설명          | 비고       |
+|--------------|--------|-------------|----------|
+| controllerId | string | 컨트롤러 MAC 주소 | PK       |
+| userId       | string | 사용자 ID      | FK(user) |
+| updatedAt    | string | 갱신 일        |          |  
+| createdAt    | string | 생성 일        |          |
 
-| 컬럼명    | 자료형    | 설명          | 비고 |
-|--------|--------|-------------|----|
-| userId | string | 사용자 ID      | FK |
-| CID    | string | 컨트롤러 MAC 주소 | PK |  
+### 3. controller_setting
 
-### 3. CTRL_SETTING
+| 컬럼명          | 자료형    | 설명          | 비고                |
+|--------------|--------|-------------|-------------------|
+| id           | string | 컨트롤러 MAC 주소 | PK, AutoIncrement |
+| controllerId | string | 컨트롤러 MAC 주소 | FK                |
+| SETTEMP      | string | 제어 설정 온도    |                   |
+| TEMPGAP      | int    | 온도 편차       |                   |
+| HEATTEMP     | int    | 제상 히터 온도    |                   |
+| ICETYPE      | int    | 냉동기 타입      |                   |
+| ALARMTYPE    | int    | 경보 유형       |                   |
+| ALRAMTEMPH   | int    | 고온 경보 한계    |                   |
+| ALRAMTMEPL   | int    | 저온 경보 한계    |                   |
+| TEL          | string | 전화번호        |                   |
+| AWSBIT       | int    | AWS 사용 여부   |                   |
+| createdAt    | string | 생성 일        |          |
 
-| 컬럼명        | 자료형    | 설명          | 비고 |
-|------------|--------|-------------|----|
-| CID        | string | 컨트롤러 MAC 주소 | FK |
-| SETTEMP    | string | 제어 설정 온도    |    |
-| TEMPGAP    | int    | 온도 편차       |    |
-| HEATTEMP   | int    | 제상 히터 온도    |    |
-| ICETYPE    | int    | 냉동기 타입      |    |
-| ALARMTYPE  | int    | 경보 유형       |    |
-| ALRAMTEMPH | int    | 고온 경보 한계    |    |
-| ALRAMTMEPL | int    | 저온 경보 한계    |    |
-| TEL        | string | 전화번호        |    |
-| AWSBIT     | int    | AWS 사용 여부   |    |
 
 ### 4. UNIT_SETTING
 
