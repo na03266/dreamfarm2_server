@@ -8,9 +8,16 @@ import { MQTT_TOPIC } from "./const/env.const";
 export class HttpController {
   constructor(@Inject('MY_MQTT_SERVICE') private client: ClientProxy) {}
 
-  @All('web')
-  async normal(@Req() req: Request, @Res() res: Response) {
-    //get 방식으로 데이터를 받아서 data 라는 키 값으로 mqtt서버로 전송
+  // @All('web')
+  // async normal(@Req() req: Request, @Res() res: Response) {
+  //   //get 방식으로 데이터를 받아서 data 라는 키 값으로 mqtt서버로 전송
+  //   console.log(req.query);
+  //   await this.client.send(`${MQTT_TOPIC}`, req.query).pipe(take(1)).subscribe();
+  //   res.status(HttpStatus.OK).send({ yourRequest: req.query });
+  // }
+  @Get('web')
+  async handleGetRequest(@Req() req: Request, @Res() res: Response) {
+    // GET 방식으로 데이터를 받아서 처리
     console.log(req.query);
     await this.client.send(`${MQTT_TOPIC}`, req.query).pipe(take(1)).subscribe();
     res.status(HttpStatus.OK).send({ yourRequest: req.query });

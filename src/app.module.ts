@@ -6,6 +6,7 @@ import { HOST, MQTT_PORT, MQTT_USER_ID, MQTT_USER_PW } from './const/env.const';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
+import { AuthModule } from './auth/auth.module';
 
 const clients = ClientsModule.register([
   {
@@ -35,6 +36,7 @@ const clients = ClientsModule.register([
       entities: [],
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
