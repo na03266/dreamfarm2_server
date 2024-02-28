@@ -9,10 +9,7 @@ export class AppService {
    * @param context
    */
   getDataByTopic(data: any) {
-
-
-// 이제 안전하게 context.getTopic()를 호출할 수 있습니다.
-
+    // 이제 안전하게 context.getTopic()를 호출할 수 있습니다.
 
     // data 타입 및 내용 확인을 위한 로깅
     console.log(`Received data type: ${typeof data}`);
