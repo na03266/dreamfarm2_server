@@ -4,7 +4,7 @@ import { RolesEnum } from '../const/roles.const';
 import { ControllersModel } from '../../controller/entities/controllers.entity';
 
 @Entity()
-export class UsersModel extends BaseModel {
+export class UsersModel {
   @PrimaryColumn()
   userId: string;
 
@@ -16,10 +16,6 @@ export class UsersModel extends BaseModel {
   })
   name: string;
 
-  @Column({
-    unique: true,
-  })
-  email: string;
 
   @Column({
     nullable: true,

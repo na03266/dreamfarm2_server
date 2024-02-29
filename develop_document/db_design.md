@@ -5,28 +5,23 @@ erDiagram
     users_model ||--o{ ctrl_model: "has"
     ctrl_model ||--o{ unit_model: "환경 구성"
     ctrl_model ||--o{ ctrl_setting: "환경 구성"
-    ctrl_setting ||--o{ ctrl_setting_log: "환경 구성"
     ctrl_model ||--o{ sensor_model: "환경 구성"
-    sensor_model ||--o{ sensor_data: "모니터링"
-    sensor_model ||--o{ sensor_setting: "모니터링"
-    sensor_data ||--|| sensor_data_log: "로그"
-    sensor_setting ||--|| sensor_setting_log: "모니터링"
-    unit_model ||--o{ unit_setting: "모니터링"
-    unit_model ||--o{ unit_status: "모니터링"
-    unit_status ||--|| unit_setting_log: "모니터링"
-    unit_setting ||--|| unit_status_log: "모니터링"
+    sensor_model ||--|| sensor_data: "모니터링"
+    sensor_model ||--|| sensor_setting: "모니터링"
+    unit_model ||--|| unit_setting: "모니터링"
+    unit_model ||--|| unit_status: "모니터링"
 
     users_model {
         string userId "사용자 ID"
         string password "비밀번호"
         string name "이름"
-        string email "이메일"
         string phoneNumber "전화번호"
         string role "권한"
     }
     ctrl_model {
         string userId "사용자 ID"
         string CID "컨트롤러 MAC 주소"
+        string logTime  "업데이트 시간"
     }
     ctrl_setting {
         string id "아이디"
@@ -40,7 +35,7 @@ erDiagram
         int ALRAMTMEPL "저온 경보 한계"
         string TEL "전화번호"
         int AWSBIT "AWS 사용 여부"
-        string updatedAt "업데이트 시간"
+        string logTime  "업데이트 시간"
     }
     ctrl_setting_log {
         string id "아이디"
@@ -54,7 +49,7 @@ erDiagram
         int ALRAMTMEPL "저온 경보 한계"
         string TEL "전화번호"
         int AWSBIT "AWS 사용 여부"
-        string createdAt "생성 시간"
+        string logTime  "업데이트 시간"
     }
     unit_model {
         string id "아이디"
@@ -75,7 +70,7 @@ erDiagram
         int UCLOSETIME "작동기 클로즈 시간"
         int UOPTYPE "작동기 동작 유형"
         string UTIMER "작동기 타이머"
-        string updatedAt "업데이트 시간"
+        string logTime  "업데이트 시간"
     }
     unit_setting_log {
         string id "아이디"
@@ -91,7 +86,7 @@ erDiagram
         int UCLOSETIME "작동기 클로즈 시간"
         int UOPTYPE "작동기 동작 유형"
         string UTIMER "작동기 타이머"
-        string createdAt "생성 시간"
+        string logTime  "업데이트 시간"
     }
     sensor_model {
         string id "아이디"
@@ -107,7 +102,7 @@ erDiagram
         float SMULT "보정값 계수"
         float SOFFSET "오프셋값"
         string SEQ "변환 수식"
-        string updatedAt "업데이트 시간"
+        string logTime  "업데이트 시간"
     }
     sensor_setting_log {
         string id "아이디"
@@ -118,29 +113,29 @@ erDiagram
         float SMULT "보정값 계수"
         float SOFFSET "오프셋값"
         string SEQ "변환 수식"
-        string createdAt "생성 시간"
+        string logTime  "업데이트 시간"
     }
     sensor_data {
         string id "아이디"
         string CID "컨트롤러 MAC 주소"
         int sid "센서 ID"
         float value "센서값"
-        string updatedAt "업데이트 시간"
+        string logTime  "업데이트 시간"
     }
     sensor_data_log {
         string id "아이디"
         string CID "컨트롤러 MAC 주소"
         int sid "센서 ID"
         float value "센서값"
-        string createdAt "생성 시간"
+        string logTime  "업데이트 시간"
     }
     unit_status {
         string id "아이디"
         string CID "컨트롤러 MAC 주소"
-        int uid "작동기 ID"
+        int UID  "작동기 ID"
         int mode "작동기 모드"
         int status "작동기 상태"
-        string updatedAt "업데이트 시간"
+        string logTime  "업데이트 시간"
     }
     unit_status_log {
         string id "아이디"
@@ -148,7 +143,7 @@ erDiagram
         int uid "작동기 ID"
         int mode "작동기 모드"
         int status "작동기 상태"
-        string createdAt "생성 시간"
+        string logTime  "업데이트 시간"
     }
 ```
 

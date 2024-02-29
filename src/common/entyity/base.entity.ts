@@ -5,9 +5,9 @@ import {
 } from 'typeorm';
 
 export abstract class BaseModel {
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @PrimaryGeneratedColumn()
+  id: number
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @UpdateDateColumn()
+  logTime: Date;
 }

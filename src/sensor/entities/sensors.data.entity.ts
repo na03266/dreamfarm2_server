@@ -1,22 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { BaseModel } from "../../common/entyity/base.entity";
-import { ControllersModel } from "../../controller/entities/controllers.entity";
-import { SensorSettingModel } from "./sensors.setting.entity";
+import { Column, Entity } from 'typeorm';
+import { SensorsModel } from './sensors.entity';
 
 @Entity()
-export class SensorDataModel extends BaseModel{
-  @PrimaryGeneratedColumn()
-  id:number
-
-  @ManyToOne(() => ControllersModel, (controller) => controller.controllerId)
-  @JoinColumn({ name: 'controllerId' })
-  controllerId: string;
-
-  @OneToOne(()=>SensorSettingModel, (sonsor)=> sonsor.sensorId)
-  sensorId: number;
-
+export class SensorsDataModel extends SensorsModel {
   @Column({
-    comment: '센서 값'
+    comment: '센서 값',
   })
-  sensorValue: number;
+  value: number;
 }

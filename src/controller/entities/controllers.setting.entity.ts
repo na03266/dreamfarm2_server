@@ -1,22 +1,8 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { BaseModel } from '../../common/entyity/base.entity';
-import { ControllersModel } from "./controllers.entity";
+import { Column, Entity } from 'typeorm';
+import { ControllersModel } from './controllers.entity';
 
 @Entity()
-export class ControllersSettingModel extends BaseModel {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(() => ControllersModel, (controller) => controller.controllerId)
-  @JoinColumn({ name: 'controllerId' })
-  controllerId: ControllersModel;
-
+export class ControllersSettingModel extends ControllersModel {
   @Column({
     comment: '제어 설정 온도',
   })

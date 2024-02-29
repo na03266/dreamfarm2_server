@@ -1,70 +1,58 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { BaseModel } from '../../common/entyity/base.entity';
-import { ControllersModel } from "../../controller/entities/controllers.entity";
+import { Column, Entity } from 'typeorm';
+import { UnitsModel } from './units.entity';
 
 
 @Entity()
-export class UnitSettingModel extends BaseModel {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(()=>ControllersModel, (controller)=>controller.controllerId)
-  @JoinColumn({name: 'controllerId'})
-  controllerId: string
-
-  @Column({
-    comment: '작동기 ID'
-  })
-  unitId: number;
+export class UnitsSettingModel extends UnitsModel {
 
   @Column({
     comment: '작동기 타입'
   })
-  unitType: number;
+  UTYPE: number;
 
   @Column({
     comment: '작동기 채널'
   })
-  unitChannel: number;
+  UCH: number;
 
   @Column({
     comment: '작동기 오픈 채널'
   })
-  unitOpenChannel: number;
+  UOPENCH: number;
 
   @Column({
     comment: '작동기 클로즈 채널'
   })
-  unitCloseChannel: number;
+  UCLOSECH: number;
 
   @Column({
     comment: '작동기 이동 시간'
   })
-  unitMoveTime: number;
+  UMVTIME: number;
 
   @Column({
     comment: '작동기 정지 시간'
   })
-  unitStopTime: number;
+  USTTIME: number;
 
   @Column({
     comment: '작동기 오픈 시간'
   })
-  unitOpenTime: string;
+  UOPENTIME: string;
 
   @Column({
     comment: '작동기 클로즈 시간'
   })
-  unitCloseTime: string;
+  UCLOSETIME: string;
 
   @Column({
     comment: '작동기 동작 유형'
   })
-  unitOperatingType: number;
+  UOPTYPE: number;
 
   @Column({
     comment: '작동기 타이머'
   })
-  unitTimer: string;
+  UTIMER: string;
 
 }

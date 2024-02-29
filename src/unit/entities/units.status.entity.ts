@@ -1,16 +1,10 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { BaseModel } from '../../common/entyity/base.entity';
-import { ControllersModel } from "../../controller/entities/controllers.entity";
-import { ControllerModule } from "../../controller/controller.module";
+import { Column, Entity } from 'typeorm';
+import { UnitsModel } from './units.entity';
 
 @Entity()
-export class UnitStatusModel extends BaseModel {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(()=>ControllersModel, (controller)=>controller.controllerId)
-  Controllers: ControllersModel[]
-
-  @ManyToOne(()=>UnitStatusModel, ()=>)
-  Units: UnitStatusModel
+export class UnitsStatusModel extends UnitsModel {
+  @Column()
+  mode: number;
+  @Column()
+  status: number;
 }

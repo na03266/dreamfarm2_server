@@ -1,37 +1,33 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import { BaseModel } from '../../common/entyity/base.entity';
 import { UsersModel } from '../../users/entities/users.entity';
+import { UnitsModel } from '../../unit/entities/units.entity';
+import { SensorsModel } from '../../sensor/entities/sensors.entity';
 
 @Entity()
 export class ControllersModel extends BaseModel {
   @PrimaryColumn()
-  controllerId: string;
+  CID: string;
 
   @ManyToOne(() => UsersModel, (user) => user.controllers)
   @JoinColumn({ name: 'userId' })
   user: UsersModel;
 
-  // /**
-  //  * controller setting 일대다
-  //  */
-  // @OneToMany(
-  //   () => ControllerSettingModel,
-  //   (settingModel) => settingModel.controllerId,
-  // )
-  // controllerSettings: ControllerSettingModel[];
-  //
-  // /**
-  //  * 유닛 세팅 일대다
-  //  */
-  // @OneToMany(
-  //   () => UnitSettingModel,
-  //   (unitSettingModel) => unitSettingModel.controllerId,
-  // )
-  // controllerUnits: UnitSettingModel[];
-  //
-  // /**
-  //  * 센서 세팅 일대다
-  //  */
-  // @OneToMany(() => SensorSettingModel, (sensorId) => sensorId.controllerId)
-  // sensors: SensorSettingModel[];
+  /**
+   * 유닛 세팅 일대다
+   */
+  @OneToMany(() => UnitsModel, (unit) => unit.UID)
+  units: UnitsModel[];
+
+  /**
+   * 센서 세팅 일대다
+   */
+  @OneToMany(() => SensorsModel, (sensorId) => sensorId.CID)
+  sensors: SensorsModel[];
 }

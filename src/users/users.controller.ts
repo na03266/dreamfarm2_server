@@ -16,6 +16,6 @@ export class UsersController {
     @Body('userEmail') userEmail: string,
     @Body('password') password: string,
   ) {
-    return this.usersService.createUser({userEmail,userId,password});
+    // return this.usersService.createUser({userEmail,userId,password});
   }
 }
