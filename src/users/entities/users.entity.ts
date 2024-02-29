@@ -8,11 +8,6 @@ export class UsersModel extends BaseModel {
   @PrimaryColumn()
   userId: string;
 
-  @Column({
-    unique: true,
-  })
-  userEmail: string;
-
   @Column()
   password: string;
 
@@ -22,14 +17,14 @@ export class UsersModel extends BaseModel {
   name: string;
 
   @Column({
-    nullable: true,
+    unique: true,
   })
-  phone: string;
+  email: string;
 
   @Column({
     nullable: true,
   })
-  address: string;
+  phoneNumber: string;
 
   @Column({
     enum: Object.values(RolesEnum),

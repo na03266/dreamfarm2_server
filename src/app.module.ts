@@ -7,11 +7,16 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModel } from "./users/entities/users.entity";
+import { UsersModel } from './users/entities/users.entity';
 import { ControllerModule } from './controller/controller.module';
-import { ControllersModel } from "./controller/entities/controllers.entity";
+import { ControllersModel } from './controller/entities/controllers.entity';
 import { SensorModule } from './sensor/sensor.module';
 import { UnitModule } from './unit/unit.module';
+import { UnitStatusModel } from './unit/entities/units.status.entity';
+import { UnitSettingModel } from './unit/entities/units.setting.entity';
+import { SensorSettingModel } from "./sensor/entities/sensors.setting.entity";
+import { SensorDataModel } from "./sensor/entities/sensors.data.entity";
+import { ControllersSettingModel } from "./controller/entities/controllers.setting.entity";
 
 const clients = ClientsModule.register([
   {
@@ -38,7 +43,15 @@ const clients = ClientsModule.register([
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [UsersModel, ControllersModel],
+      entities: [
+        UsersModel,
+        ControllersModel,
+        ControllersSettingModel,
+        UnitStatusModel,
+        UnitSettingModel,
+        SensorSettingModel,
+        SensorDataModel,
+      ],
       synchronize: true,
     }),
     AuthModule,
