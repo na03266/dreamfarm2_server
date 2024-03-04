@@ -19,6 +19,7 @@ import { UnitsModel } from './unit/entities/units.entity';
 import { SensorsModel } from './sensor/entities/sensors.entity';
 import { SensorsSettingModel } from './sensor/entities/sensors.setting.entity';
 import { SensorsValueModel } from './sensor/entities/sensors.value.entity';
+import { UnitService } from './unit/unit.service';
 
 const clients = ClientsModule.register([
   {

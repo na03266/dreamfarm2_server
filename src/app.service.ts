@@ -1,62 +1,80 @@
-import { Injectable } from "@nestjs/common";
-import { MqttContext } from "@nestjs/microservices";
-import { InjectRepository } from "@nestjs/typeorm";
-import { SensorsValueModel } from "./sensor/entities/sensors.value.entity";
-import { Repository } from "typeorm";
-import { UnitsStatusModel } from "./unit/entities/units.status.entity";
-
-
-export interface MqttData {
-  SENSOR_VALUE?: Array<{
-    CID: string;
-    SID: string;
-    VALUE: string;
-  }>;
-  UNIT_STATUS?: Array<{
-    CID: string;
-    UID: string;
-    MODE: string;
-    STATUS: string;
-  }>;
-}
+import { Injectable } from '@nestjs/common';
+import { ClientOptions } from '@nestjs/microservices';
+import { UnitService } from './unit/unit.service';
 
 @Injectable()
 export class AppService {
-
+  constructor(private unitService: UnitService) {}
 
   /**
    * 페이로드 값을 반환하는 함수
    * @param data
    * @param context
    */
-  getDataByTopic(data: any): Object {
+  getDataByTopic(mqttData: any): MixedPayloadArray {
     // 이제 안전하게 context.getTopic()를 호출할 수 있습니다.
 
-    // data 타입 및 내용 확인을 위한 로깅
-    console.log(`Received data type: ${typeof data}`);
-    console.log(`Received data:`, data);
+    // mqttData 타입 및 내용 확인을 위한 로깅
+    console.log(`Received mqttData type: ${typeof mqttData}`);
+    console.log(`Received mqttData:`, mqttData);
 
-    // data가 문자열인지 확인하고, 객체로 파싱 시도
-    if (typeof data === "string") {
+    // mqttData가 문자열인지 확인하고, 객체로 파싱 시도
+    if (typeof mqttData === 'string') {
       try {
-        const messageObject = JSON.parse(data);
-        console.log(`Parsed data:`, messageObject);
+        const messageObject: MixedPayloadArray = JSON.parse(mqttData);
+        console.log(`Parsed mqttData:`, messageObject);
         return messageObject;
       } catch (error) {
         console.error(`Parsing error:`, error);
         // JSON.parse() 실패 시 원본 데이터 로깅
-        console.log(`Raw data: ${data}`);
+        console.log(`Raw mqttData: ${mqttData}`);
+        return [];
       }
     } else {
-      // data가 문자열이 아닌 경우, 이미 객체 형태일 수 있으므로 직접 로깅
-      console.log(`Data is not a string, logging directly:`, data);
-      return data;
+      // mqttData가 문자열이 아닌 경우, 이미 객체 형태일 수 있으므로 직접 로깅
+      console.log(`Data is not a string, logging directly:`, mqttData);
+      return mqttData;
     }
   }
 
-  async parserOnGetData(data: MqttData) {
-    if (data.SENSOR_VALUE) {
-      // await this.
-    }
+  /**
+   * json 문자열을 javascript 객체로 변환하기
+   * @param data
+   */
+  async parserOnGetData(data: any) {
+    const mqttPayload = this.getDataByTopic(data);
+
+    mqttPayload.forEach((item) => {
+      // 선택적 체이닝을 사용하여 값이 존재하는지 안전하게 확인
+      const ctrlSetting = item.CTRL_SETTING ?? []; // 기본값으로 빈 배열 제공
+      const unitSetting = item.UNIT_SETTING ?? [];
+      const sensorSetting = item.SENSOR_SETTING ?? [];
+      const sensorValue = item.SENSOR_VALUE ?? [];
+      const unitStatus = item.UNIT_STATUS ?? [];
+    });
   }
+}
+
+/**
+ * 타입가드
+ * @param item
+ */
+function isCTRLSetting(item: any): item is CTRL_SETTING {
+  return 'CID' in item && 'SETTEMP' in item;
+}
+
+function isUNITSetting(item: any): item is UNIT_SETTING {
+  return 'UID' in item && 'UTYPE' in item;
+}
+
+function isSENSORSetting(item: any): item is SENSOR_SETTING {
+  return 'SID' in item && 'SCH' in item;
+}
+
+function isSENSORValue(item: any): item is SENSOR_VALUE {
+  return 'VALUE' in item && 'SID' in item && !('MODE' in item);
+}
+
+function isUNITStatus(item: any): item is UNIT_STATUS {
+  return 'MODE' in item && 'STATUS' in item;
 }

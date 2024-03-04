@@ -22,6 +22,6 @@ export class AppController {
    */
   @MessagePattern(`${MQTT_TOPIC}`)
   getNotifications(@Payload() data: any) {
-    return this.appService.getDataByTopic(data);
+    return this.appService.parserOnGetData(data);
   }
 }

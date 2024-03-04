@@ -5,17 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UnitsStatusModel } from './entities/units.status.entity';
 import { UnitsSettingModel } from './entities/units.setting.entity';
 import { ControllersModel } from '../controller/entities/controllers.entity';
-import { UnitsModel } from "./entities/units.entity";
+import { UnitsModel } from './entities/units.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      UnitsModel,
-      UnitsSettingModel,
-      UnitsStatusModel,
-    ]),
+    TypeOrmModule.forFeature([UnitsModel, UnitsSettingModel, UnitsStatusModel]),
   ],
   controllers: [UnitController],
   providers: [UnitService],
+  exports: [UnitService],
 })
 export class UnitModule {}
