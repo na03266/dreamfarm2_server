@@ -1,12 +1,10 @@
-import { Column, Entity, ManyToOne, OneToOne } from 'typeorm';
-import { ControllersModel } from '../../controller/entities/controllers.entity';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { BaseModel } from '../../common/entyity/base.entity';
-import { UnitsSettingModel } from './units.setting.entity';
 
 @Entity()
-export class UnitsModel extends BaseModel {
-  @ManyToOne(() => ControllersModel, (controller) => controller.CID)
-  CID: ControllersModel;
+export abstract class UnitsModel extends BaseModel {
+  @PrimaryColumn()
+  CID: string;
 
   @Column()
   UID: string;

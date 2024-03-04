@@ -1,13 +1,12 @@
-import { BaseModel } from "../../common/entyity/base.entity";
-import { ControllersModel } from "../../controller/entities/controllers.entity";
-import { Column, Entity, ManyToOne } from "typeorm";
+import { BaseModel } from '../../common/entyity/base.entity';
+import { ControllersModel } from '../../controller/entities/controllers.entity';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class SensorsModel extends BaseModel{
+export abstract class SensorsModel extends BaseModel {
+  @PrimaryColumn()
+  CID: string;
 
-  @ManyToOne(()=>ControllersModel, (controller)=>controller.CID)
-  CID:ControllersModel
-
-  @Column()
-  SID:string
+  @PrimaryColumn()
+  SID: string;
 }

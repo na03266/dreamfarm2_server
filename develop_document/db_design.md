@@ -4,7 +4,7 @@
 erDiagram
     users_model ||--o{ ctrl_model: "has"
     ctrl_model ||--o{ unit_model: "환경 구성"
-    ctrl_model ||--o{ ctrl_setting: "환경 구성"
+    ctrl_model ||--|| ctrl_setting: "환경 구성"
     ctrl_model ||--o{ sensor_model: "환경 구성"
     sensor_model ||--|| sensor_data: "모니터링"
     sensor_model ||--|| sensor_setting: "모니터링"

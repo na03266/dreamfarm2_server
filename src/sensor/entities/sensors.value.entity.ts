@@ -2,7 +2,7 @@ import { Column, Entity } from 'typeorm';
 import { SensorsModel } from './sensors.entity';
 
 @Entity()
-export class SensorsDataModel extends SensorsModel {
+export class SensorsValueModel extends SensorsModel {
   @Column({
     comment: '센서 값',
   })

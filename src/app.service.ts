@@ -1,14 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { MqttContext } from '@nestjs/microservices';
+import { Injectable } from "@nestjs/common";
+import { MqttContext } from "@nestjs/microservices";
+import { InjectRepository } from "@nestjs/typeorm";
+import { SensorsValueModel } from "./sensor/entities/sensors.value.entity";
+import { Repository } from "typeorm";
+import { UnitsStatusModel } from "./unit/entities/units.status.entity";
+
+
+export interface MqttData {
+  SENSOR_VALUE?: Array<{
+    CID: string;
+    SID: string;
+    VALUE: string;
+  }>;
+  UNIT_STATUS?: Array<{
+    CID: string;
+    UID: string;
+    MODE: string;
+    STATUS: string;
+  }>;
+}
 
 @Injectable()
 export class AppService {
+
+
   /**
    * 페이로드 값을 반환하는 함수
    * @param data
    * @param context
    */
-  getDataByTopic(data: any) {
+  getDataByTopic(data: any): Object {
     // 이제 안전하게 context.getTopic()를 호출할 수 있습니다.
 
     // data 타입 및 내용 확인을 위한 로깅
@@ -16,7 +37,7 @@ export class AppService {
     console.log(`Received data:`, data);
 
     // data가 문자열인지 확인하고, 객체로 파싱 시도
-    if (typeof data === 'string') {
+    if (typeof data === "string") {
       try {
         const messageObject = JSON.parse(data);
         console.log(`Parsed data:`, messageObject);
@@ -30,6 +51,12 @@ export class AppService {
       // data가 문자열이 아닌 경우, 이미 객체 형태일 수 있으므로 직접 로깅
       console.log(`Data is not a string, logging directly:`, data);
       return data;
+    }
+  }
+
+  async parserOnGetData(data: MqttData) {
+    if (data.SENSOR_VALUE) {
+      // await this.
     }
   }
 }

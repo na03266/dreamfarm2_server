@@ -17,15 +17,8 @@ import { UnitsSettingModel } from './unit/entities/units.setting.entity';
 import { ControllersSettingModel } from './controller/entities/controllers.setting.entity';
 import { UnitsModel } from './unit/entities/units.entity';
 import { SensorsModel } from './sensor/entities/sensors.entity';
-import { ControllersSettingLogModel } from './controller/entities/controllers.setting.log.entity';
-import { UnitsSettingLogModel } from './unit/entities/units.log.entity';
-import { UnitStatusLogModel } from './unit/entities/unit.status.log.entity';
 import { SensorsSettingModel } from './sensor/entities/sensors.setting.entity';
-import { SensorsDataModel } from './sensor/entities/sensors.data.entity';
-import {
-  SensorsDataLogModel,
-  SensorsSettingLogModel,
-} from './sensor/entities/sensors.log.entity';
+import { SensorsValueModel } from './sensor/entities/sensors.value.entity';
 
 const clients = ClientsModule.register([
   {
@@ -56,17 +49,12 @@ const clients = ClientsModule.register([
         UsersModel,
         ControllersModel,
         ControllersSettingModel,
-        ControllersSettingLogModel,
         UnitsModel,
         UnitsSettingModel,
-        UnitsSettingLogModel,
         UnitsStatusModel,
-        UnitStatusLogModel,
         SensorsModel,
         SensorsSettingModel,
-        SensorsDataModel,
-        SensorsSettingLogModel,
-        SensorsDataLogModel,
+        SensorsValueModel,
       ],
       synchronize: true,
     }),

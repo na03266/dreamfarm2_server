@@ -5,13 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UnitsStatusModel } from './entities/units.status.entity';
 import { UnitsSettingModel } from './entities/units.setting.entity';
 import { ControllersModel } from '../controller/entities/controllers.entity';
+import { UnitsModel } from "./entities/units.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      UnitsStatusModel,
+      UnitsModel,
       UnitsSettingModel,
-      ControllersModel,
+      UnitsStatusModel,
     ]),
   ],
   controllers: [UnitController],

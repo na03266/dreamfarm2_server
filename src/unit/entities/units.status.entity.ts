@@ -4,7 +4,7 @@ import { UnitsModel } from './units.entity';
 @Entity()
 export class UnitsStatusModel extends UnitsModel {
   @Column()
-  mode: number;
+  MODE: number;
   @Column()
-  status: number;
+  STATUS: number;
 }
