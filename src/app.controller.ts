@@ -6,7 +6,7 @@ import {
   Payload,
 } from '@nestjs/microservices';
 import { AppService } from './app.service';
-import { MQTT_TOPIC } from "./const/env.const";
+import { MQTT_TOPIC } from './const/env.const';
 
 @Controller()
 export class AppController {
@@ -22,6 +22,6 @@ export class AppController {
    */
   @MessagePattern(`${MQTT_TOPIC}`)
   getNotifications(@Payload() data: any) {
-    return this.appService.parserOnGetData(data);
+    return this.appService.getDataByTopic(data);
   }
 }

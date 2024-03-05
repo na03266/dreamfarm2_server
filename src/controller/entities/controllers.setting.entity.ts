@@ -1,50 +1,51 @@
 import { Column, Entity } from 'typeorm';
 import { ControllersModel } from './controllers.entity';
+import { IsNotEmpty } from 'class-validator';
 
 @Entity()
 export class ControllersSettingModel extends ControllersModel {
   @Column({
     comment: '제어 설정 온도',
   })
-  setTemp: string;
+  SETTEMP: string;
 
   @Column({
     comment: '온도 편차',
   })
-  tempGap: number;
+  TEMPGAP: number;
 
-  @Column({
+  @Column('float', {
     comment: '제상 히터 온도',
   })
-  heatTemp: number;
+  HEATTEMP: number;
 
   @Column({
     comment: '냉동기 타입',
   })
-  iceType: number;
+  ICETYPE: number;
 
   @Column({
     comment: '경보 유형',
   })
-  alarmType: number;
+  ALARMTYPE: number;
 
   @Column({
     comment: '고온 경보 한계',
   })
-  alarmTempHigh: number;
+  ALRAMTEMPH: number;
 
   @Column({
     comment: '저온 경보 한계',
   })
-  alarmTempLow: number;
+  ALRAMTMEPL: number;
 
   @Column({
     comment: '전화번호',
   })
-  phone: string;
+  TEL: string;
 
   @Column({
     comment: 'amazon web server 사용 여부',
   })
-  awsUsed: number;
+  AWS: number;
 }

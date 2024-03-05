@@ -14,6 +14,12 @@ export class UnitsSettingModel extends UnitsModel {
     comment: '작동기 채널',
   })
   @IsNumber()
+  UGROUP: number;
+
+  @Column({
+    comment: '작동기 채널',
+  })
+  @IsNumber()
   UCH: number;
 
   @Column({

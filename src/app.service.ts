@@ -1,22 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { ClientOptions } from '@nestjs/microservices';
 import { UnitService } from './unit/unit.service';
+import {
+  CTRL_SETTING,
+  MixedPayloadArray,
+  SENSOR_SETTING,
+  SENSOR_VALUE,
+  UNIT_SETTING,
+  UNIT_STATUS,
+} from './const/interfaces';
+import { MqttDto } from './const/mqtt.dto';
+import { ControllerService } from './controller/controller.service';
+import { CreateControllersSettingDto } from './controller/dto/create-controllers-setting.dto';
 
 @Injectable()
 export class AppService {
-  constructor(private unitService: UnitService) {}
+  constructor(private controllerService: ControllerService) {}
 
   /**
    * 페이로드 값을 반환하는 함수
    * @param data
    * @param context
    */
-  getDataByTopic(mqttData: any): MixedPayloadArray {
+  getDataByTopic(mqttData: any) {
     // 이제 안전하게 context.getTopic()를 호출할 수 있습니다.
 
     // mqttData 타입 및 내용 확인을 위한 로깅
-    console.log(`Received mqttData type: ${typeof mqttData}`);
-    console.log(`Received mqttData:`, mqttData);
+    // console.log(`Received mqttData type: ${typeof mqttData}`);
+    // console.log(`Received mqttData:`, mqttData);
 
     // mqttData가 문자열인지 확인하고, 객체로 파싱 시도
     if (typeof mqttData === 'string') {
@@ -32,49 +42,103 @@ export class AppService {
       }
     } else {
       // mqttData가 문자열이 아닌 경우, 이미 객체 형태일 수 있으므로 직접 로깅
-      console.log(`Data is not a string, logging directly:`, mqttData);
-      return mqttData;
+      // console.log(`Data is not a string, logging directly:`, mqttData);
+      return this.processData(mqttData);
     }
   }
 
   /**
-   * json 문자열을 javascript 객체로 변환하기
+   * 수신 값에 따른 Object 분할
+   * Object 별 파싱 로직으로 전달
    * @param data
    */
-  async parserOnGetData(data: any) {
-    const mqttPayload = this.getDataByTopic(data);
+  processData(data: MqttDto) {
+    // CTRL_SETTING 처리
+    if (data.CTRL_SETTING) {
+      this.processCtrlSetting(data.CTRL_SETTING);
+    }
 
-    mqttPayload.forEach((item) => {
-      // 선택적 체이닝을 사용하여 값이 존재하는지 안전하게 확인
-      const ctrlSetting = item.CTRL_SETTING ?? []; // 기본값으로 빈 배열 제공
-      const unitSetting = item.UNIT_SETTING ?? [];
-      const sensorSetting = item.SENSOR_SETTING ?? [];
-      const sensorValue = item.SENSOR_VALUE ?? [];
-      const unitStatus = item.UNIT_STATUS ?? [];
-    });
+    if (data.UNIT_SETTING) {
+      console.log(data.UNIT_SETTING);
+      // UNIT_SETTING 배열 처리
+      data.UNIT_SETTING.forEach((setting) => {
+        // this.processUnitSetting(setting);
+        // console.log(data.UNIT_SETTING);
+      });
+    }
+
+    if (data.UNIT_STATUS) {
+      // UNIT_STATUS 배열 처리
+      data.UNIT_STATUS.forEach((setting) => {
+        this.processUnitStatus(setting);
+        // console.log(data.SENSOR_SETTING);
+      });
+    }
+
+    if (data.SENSOR_SETTING) {
+      // SENSOR_SETTING 배열 처리
+      data.SENSOR_SETTING.forEach((setting) => {
+        this.processSensorSetting(setting);
+        // console.log(data.SENSOR_SETTING);
+      });
+    }
+
+    if (data.SENSOR_VALUE) {
+      // SENSOR_VALUE 배열 처리
+      data.SENSOR_VALUE.forEach((setting) => {
+        this.processSensorValue(setting);
+        // console.log(data.SENSOR_SETTING);
+      });
+    }
   }
-}
 
-/**
- * 타입가드
- * @param item
- */
-function isCTRLSetting(item: any): item is CTRL_SETTING {
-  return 'CID' in item && 'SETTEMP' in item;
-}
+  /**
+   * 컨트롤러 세팅값 자료형 변환
+   * @param setting
+   * @private
+   */
+  private processCtrlSetting(setting: CreateControllersSettingDto) {
+    // console.log('Processing CTRL_SETTING:', setting);
+    return this.controllerService.createControllerSetting(setting);
+  }
 
-function isUNITSetting(item: any): item is UNIT_SETTING {
-  return 'UID' in item && 'UTYPE' in item;
-}
+  /**
+   * 유닛 세팅값 자료형 변환
+   * @param setting
+   * @private
+   */
+  private processUnitSetting(setting: UNIT_SETTING) {
+    // console.log('Processing UNIT_SETTING:', setting);
+    // UNIT_SETTING 관련 로직 구현
+  }
 
-function isSENSORSetting(item: any): item is SENSOR_SETTING {
-  return 'SID' in item && 'SCH' in item;
-}
+  /**
+   * 유닛 상태 값 자료형 변환
+   * @param setting
+   * @private
+   */
+  private processUnitStatus(setting: UNIT_STATUS) {
+    // console.log('Processing UNIT_STATUS:', setting);
+    // SENSOR_VALUE 관련 로직 구현
+  }
 
-function isSENSORValue(item: any): item is SENSOR_VALUE {
-  return 'VALUE' in item && 'SID' in item && !('MODE' in item);
-}
+  /**
+   * 센서 세팅값 자료형 변환
+   * @param setting
+   * @private
+   */
+  private processSensorSetting(setting: SENSOR_SETTING) {
+    // console.log('Processing SENSOR_SETTING:', setting);
+    // SENSOR_SETTING 관련 로직 구현
+  }
 
-function isUNITStatus(item: any): item is UNIT_STATUS {
-  return 'MODE' in item && 'STATUS' in item;
+  /**
+   * 센서 값 자료형 변환
+   * @param setting
+   * @private
+   */
+  private processSensorValue(setting: SENSOR_VALUE) {
+    // console.log('Processing SENSOR_VALUE:', setting);
+    // SENSOR_VALUE 관련 로직 구현
+  }
 }
