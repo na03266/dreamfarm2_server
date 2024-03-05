@@ -6,6 +6,8 @@ import { UnitsSettingModel } from './entities/units.setting.entity';
 import { CreateControllersSettingDto } from '../controller/dto/create-controllers-setting.dto';
 import { ControllersSettingModel } from '../controller/entities/controllers.setting.entity';
 import { CreateUnitSettingDto } from './dto/create-unit-setting.dto';
+import { CreateUnitStatusDto } from './dto/create-unit-status.dto';
+import { createTestScheduler } from "jest";
 
 @Injectable()
 export class UnitService {
@@ -17,7 +19,7 @@ export class UnitService {
   ) {}
 
   /**
-   * ControllerSetting DB insert 로직
+   * UnitSetting DB insert 로직
    * @param createDto
    */
   async createUnitSetting(
@@ -74,7 +76,7 @@ export class UnitService {
       /**
        * 최신 값이 있고 값이 다르면 갱신
        */
-    } else if (!this.areObjectsEqual(latestSetting, newSetting)) {
+    } else if (!this.areSettingObjectsEqual(latestSetting, newSetting)) {
       console.log('ah');
       const updatedSetting = this.unitsSettingRepository.create(newSetting);
       await this.unitsSettingRepository.save(updatedSetting);
@@ -82,9 +84,66 @@ export class UnitService {
     }
   }
 
-  areObjectsEqual(
+  areSettingObjectsEqual(
     obj1: Partial<UnitsSettingModel>,
     obj2: Partial<UnitsSettingModel>,
+  ): boolean {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    for (const key of keys1) {
+      if (obj1[key] !== obj2[key]) {
+        return false;
+      }
+    }
+    return true; // 모든 키에 대해 값이 같다면, 두 객체는 동일
+  }
+
+  /**
+   * CreateUnitStatus DB insert
+   */
+  async createUnitStatus(
+    createDto: CreateUnitStatusDto,
+  ): Promise<UnitsStatusModel> {
+    /**
+     * 일단 값 변환
+     */
+    const newSetting = {
+      CID: createDto.CID,
+      UID: createDto.UID,
+      MODE: parseInt(createDto.MODE),
+      STATUS: parseInt(createDto.STATUS),
+    };
+
+    // CID 를 기준으로 가장 최신의 세팅값을 불러옴
+    const latestSetting =
+      (await this.unitsStatusRepository.findOne({
+        select: ['CID', 'UID', 'MODE', 'STATUS'],
+        where: {
+          CID: createDto.CID,
+          UID: createDto.UID,
+        },
+        order: { logTime: 'DESC' },
+      })) ?? null;
+    console.log(latestSetting);
+
+    if (!latestSetting) {
+      const createSetting = this.unitsStatusRepository.create(newSetting);
+      this.unitsStatusRepository.save(createSetting);
+      return createSetting; // 여기서 함수를 종료합니다.
+      /**
+       * 최신 값이 있고 값이 다르면 갱신
+       */
+    } else if (!this.areStatusObjectsEqual(latestSetting, newSetting)) {
+      console.log('ah');
+      const updatedSetting = this.unitsStatusRepository.create(newSetting);
+      await this.unitsStatusRepository.save(updatedSetting);
+      return updatedSetting;
+    }
+  }
+
+  areStatusObjectsEqual(
+    obj1: Partial<UnitsStatusModel>,
+    obj2: Partial<UnitsStatusModel>,
   ): boolean {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);

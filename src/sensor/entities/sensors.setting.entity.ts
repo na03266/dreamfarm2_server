@@ -13,12 +13,12 @@ export class SensorsSettingModel extends SensorsModel {
   })
   SRESERVERD: number;
 
-  @Column({
+  @Column('float', {
     comment: '보정값 계수',
   })
   SMULT: number;
 
-  @Column({
+  @Column('float', {
     comment: '오프셋 값',
   })
   SOFFSET: number;

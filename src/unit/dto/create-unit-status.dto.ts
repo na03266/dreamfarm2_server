@@ -1,7 +1,9 @@
 import { UnitsStatusModel } from '../entities/units.status.entity';
 import { OmitType } from '@nestjs/mapped-types';
 
-export class CreateUnitStatusDto extends OmitType(UnitsStatusModel, [
-  'id',
-  'logTime',
-]) {}
+export class CreateUnitStatusDto {
+  CID: string;
+  UID: string;
+  MODE: string;
+  STATUS: string;
+}

@@ -3,8 +3,8 @@ import { SensorsModel } from './sensors.entity';
 
 @Entity()
 export class SensorsValueModel extends SensorsModel {
-  @Column({
+  @Column('float', {
     comment: '센서 값',
   })
-  value: number;
+  VALUE: number;
 }

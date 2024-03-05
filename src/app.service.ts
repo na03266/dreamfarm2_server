@@ -11,10 +11,19 @@ import {
 import { MqttDto } from './const/mqtt.dto';
 import { ControllerService } from './controller/controller.service';
 import { CreateControllersSettingDto } from './controller/dto/create-controllers-setting.dto';
+import { SensorService } from './sensor/sensor.service';
+import { CreateUnitSettingDto } from "./unit/dto/create-unit-setting.dto";
+import { CreateUnitStatusDto } from "./unit/dto/create-unit-status.dto";
+import { CreateSensorSettingDto } from "./sensor/dto/create-sensor-setting.dto";
+import { CreateSensorValueDto } from "./sensor/dto/create-sensor-value.dto";
 
 @Injectable()
 export class AppService {
-  constructor(private controllerService: ControllerService) {}
+  constructor(
+    private controllerService: ControllerService,
+    private unitService: UnitService,
+    private sensorService: SensorService,
+  ) {}
 
   /**
    * 페이로드 값을 반환하는 함수
@@ -26,7 +35,7 @@ export class AppService {
 
     // mqttData 타입 및 내용 확인을 위한 로깅
     // console.log(`Received mqttData type: ${typeof mqttData}`);
-    // console.log(`Received mqttData:`, mqttData);
+    console.log(`Received mqttData:`, mqttData);
 
     // mqttData가 문자열인지 확인하고, 객체로 파싱 시도
     if (typeof mqttData === 'string') {
@@ -107,9 +116,9 @@ export class AppService {
    * @param setting
    * @private
    */
-  private processUnitSetting(setting: UNIT_SETTING) {
+  private processUnitSetting(setting: CreateUnitSettingDto) {
     // console.log('Processing UNIT_SETTING:', setting);
-    // UNIT_SETTING 관련 로직 구현
+    return this.unitService.createUnitSetting(setting);
   }
 
   /**
@@ -117,9 +126,10 @@ export class AppService {
    * @param setting
    * @private
    */
-  private processUnitStatus(setting: UNIT_STATUS) {
+  private processUnitStatus(setting: CreateUnitStatusDto) {
     // console.log('Processing UNIT_STATUS:', setting);
     // SENSOR_VALUE 관련 로직 구현
+    return this.unitService.createUnitStatus(setting)
   }
 
   /**
@@ -127,9 +137,10 @@ export class AppService {
    * @param setting
    * @private
    */
-  private processSensorSetting(setting: SENSOR_SETTING) {
+  private processSensorSetting(setting: CreateSensorSettingDto) {
     // console.log('Processing SENSOR_SETTING:', setting);
     // SENSOR_SETTING 관련 로직 구현
+    return this.sensorService.createSensorSetting(setting)
   }
 
   /**
@@ -137,8 +148,9 @@ export class AppService {
    * @param setting
    * @private
    */
-  private processSensorValue(setting: SENSOR_VALUE) {
+  private processSensorValue(setting: CreateSensorValueDto) {
     // console.log('Processing SENSOR_VALUE:', setting);
     // SENSOR_VALUE 관련 로직 구현
+    return this.sensorService.createSensorValue(setting)
   }
 }
