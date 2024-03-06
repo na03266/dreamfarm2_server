@@ -12,10 +12,10 @@ import { MqttDto } from './const/mqtt.dto';
 import { ControllerService } from './controller/controller.service';
 import { CreateControllersSettingDto } from './controller/dto/create-controllers-setting.dto';
 import { SensorService } from './sensor/sensor.service';
-import { CreateUnitSettingDto } from "./unit/dto/create-unit-setting.dto";
-import { CreateUnitStatusDto } from "./unit/dto/create-unit-status.dto";
-import { CreateSensorSettingDto } from "./sensor/dto/create-sensor-setting.dto";
-import { CreateSensorValueDto } from "./sensor/dto/create-sensor-value.dto";
+import { CreateUnitSettingDto } from './unit/dto/create-unit-setting.dto';
+import { CreateUnitStatusDto } from './unit/dto/create-unit-status.dto';
+import { CreateSensorSettingDto } from './sensor/dto/create-sensor-setting.dto';
+import { CreateSensorValueDto } from './sensor/dto/create-sensor-value.dto';
 
 @Injectable()
 export class AppService {
@@ -129,7 +129,7 @@ export class AppService {
   private processUnitStatus(setting: CreateUnitStatusDto) {
     // console.log('Processing UNIT_STATUS:', setting);
     // SENSOR_VALUE 관련 로직 구현
-    return this.unitService.createUnitStatus(setting)
+    return this.unitService.createUnitStatus(setting);
   }
 
   /**
@@ -140,7 +140,7 @@ export class AppService {
   private processSensorSetting(setting: CreateSensorSettingDto) {
     // console.log('Processing SENSOR_SETTING:', setting);
     // SENSOR_SETTING 관련 로직 구현
-    return this.sensorService.createSensorSetting(setting)
+    return this.sensorService.createSensorSetting(setting);
   }
 
   /**
@@ -151,6 +151,11 @@ export class AppService {
   private processSensorValue(setting: CreateSensorValueDto) {
     // console.log('Processing SENSOR_VALUE:', setting);
     // SENSOR_VALUE 관련 로직 구현
-    return this.sensorService.createSensorValue(setting)
+    return this.sensorService.createSensorValue(setting);
   }
+
+  /**
+   * mqtt 발행 서비스
+   */
+
 }

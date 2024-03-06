@@ -16,6 +16,6 @@ import { SensorsValueModel } from './entities/sensors.value.entity';
   ],
   controllers: [SensorController],
   providers: [SensorService],
-  exports:[SensorService]
+  exports: [SensorService],
 })
 export class SensorModule {}

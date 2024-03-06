@@ -14,7 +14,7 @@ export class SensorService {
     @InjectRepository(SensorsSettingModel)
     private sensorsSettingRepository: Repository<SensorsSettingModel>,
     @InjectRepository(SensorsValueModel)
-    private sensorsValueReopsitory: Repository<SensorsValueModel>,
+    private sensorsValueRepository: Repository<SensorsValueModel>,
   ) {}
 
   /**
@@ -38,15 +38,10 @@ export class SensorService {
     };
 
     // CID 를 기준으로 가장 최신의 세팅값을 불러옴
-    const latestSetting =
-      (await this.sensorsSettingRepository.findOne({
-        select: ['CID', 'SID', 'SCH', 'SRESERVERD', 'SMULT', 'SOFFSET', 'SEQ'],
-        where: {
-          CID: createDto.CID,
-        },
-        order: { logTime: 'DESC' },
-      })) ?? null;
-    console.log(latestSetting);
+    const latestSetting = await this.findLatestSensorSetting(
+      createDto.CID,
+      createDto.SID,
+    );
 
     if (!latestSetting) {
       const createSetting = this.sensorsSettingRepository.create(newSetting);
@@ -94,27 +89,20 @@ export class SensorService {
     };
 
     // CID 를 기준으로 가장 최신의 세팅값을 불러옴
-    const latestSetting =
-      (await this.sensorsValueReopsitory.findOne({
-        select: ['CID', 'SID', 'VALUE'],
-        where: {
-          CID: createDto.CID,
-        },
-        order: { logTime: 'DESC' },
-      })) ?? null;
-    console.log(latestSetting);
+    const latestSetting = await this.findLatestSensorValue(createDto.CID, createDto.SID)
+
 
     if (!latestSetting) {
-      const createSetting = this.sensorsValueReopsitory.create(newSetting);
-      this.sensorsValueReopsitory.save(createSetting);
+      const createSetting = this.sensorsValueRepository.create(newSetting);
+      this.sensorsValueRepository.save(createSetting);
       return createSetting; // 여기서 함수를 종료합니다.
       /**
        * 최신 값이 있고 값이 다르면 갱신
        */
     } else if (!this.areValueObjectsEqual(latestSetting, newSetting)) {
       console.log('ah');
-      const updatedSetting = this.sensorsValueReopsitory.create(newSetting);
-      await this.sensorsValueReopsitory.save(updatedSetting);
+      const updatedSetting = this.sensorsValueRepository.create(newSetting);
+      await this.sensorsValueRepository.save(updatedSetting);
       return updatedSetting;
     }
   }
@@ -131,5 +119,37 @@ export class SensorService {
       }
     }
     return true; // 모든 키에 대해 값이 같다면, 두 객체는 동일합니다.
+  }
+
+  /**
+   * 가장 최신의 값을 가져와서 그 객체 모델에 저장
+   * 객체 모델에 해당 키 값을 변경
+   *
+   */
+
+  /**
+   * CID와 SID를 기준으로 센서 최신 세팅 가져오기
+   * @param CID
+   * @param SID
+   */
+  async findLatestSensorSetting(CID: string, SID: string) {
+    return await this.sensorsSettingRepository.findOne({
+      select: ['CID', 'SID', 'SCH', 'SRESERVERD', 'SMULT', 'SOFFSET', 'SEQ'],
+      where: { CID, SID },
+      order: { logTime: 'DESC' },
+    }) ?? null;
+  }
+
+  /**
+   * CID와 SID를 기준으로 센서 최신 값 가져오기
+   * @param CID
+   * @param SID
+   */
+  async findLatestSensorValue(CID: string, SID: string) {
+    return await this.sensorsValueRepository.findOne({
+      select: ['CID', 'SID', 'VALUE'],
+      where: { CID, SID },
+      order: { logTime: 'DESC' },
+    }) ?? null;
   }
 }

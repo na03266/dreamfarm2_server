@@ -9,5 +9,6 @@ import { HttpService } from "./http.service";
   ],
   controllers: [HttpController],
   providers: [HttpService],
+  exports:[HttpService]
 })
 export class HttpModule {}

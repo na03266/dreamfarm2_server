@@ -27,8 +27,10 @@ export class HttpController {
   //   await this.client.send(`${MQTT_TOPIC}`, req.query).pipe(take(1)).subscribe();
   //   res.status(HttpStatus.OK).send({ yourRequest: req.query });
   // }
-  @Post('web')
-  async handleGetRequest(@Req() req: Request, @Res() res: Response) {
+  @Post('send')
+  async handleGetRequest(@Req() req: Request, @Res() res?: Response) {
     return this.httpService.postWithPublish(req, res);
   }
+
+
 }

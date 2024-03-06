@@ -5,6 +5,10 @@ import { ControllersModel } from '../../controller/entities/controllers.entity';
 
 @Entity()
 export class UsersModel {
+
+  /**
+   * 이메일, 주소, 이름, 휴대전화, 아이디
+   */
   @PrimaryColumn()
   userId: string;
 

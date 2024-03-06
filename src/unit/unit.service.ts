@@ -7,7 +7,7 @@ import { CreateControllersSettingDto } from '../controller/dto/create-controller
 import { ControllersSettingModel } from '../controller/entities/controllers.setting.entity';
 import { CreateUnitSettingDto } from './dto/create-unit-setting.dto';
 import { CreateUnitStatusDto } from './dto/create-unit-status.dto';
-import { createTestScheduler } from "jest";
+import { createTestScheduler } from 'jest';
 
 @Injectable()
 export class UnitService {

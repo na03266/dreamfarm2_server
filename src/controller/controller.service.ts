@@ -2,6 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ControllersSettingModel } from './entities/controllers.setting.entity';
 import { Repository } from 'typeorm';
 import { CreateControllersSettingDto } from './dto/create-controllers-setting.dto';
+import { Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 export class ControllerService {
   constructor(
@@ -32,36 +34,21 @@ export class ControllerService {
       AWS: parseInt(createDto.AWS, 10),
     };
 
-    // CID 를 기준으로 가장 최신의 세팅값을 불러옴
-    const latestSetting =
-      (await this.controllersSettingRepository.findOne({
-        select: [
-          'CID',
-          'SETTEMP',
-          'TEMPGAP',
-          'HEATTEMP',
-          'ICETYPE',
-          'ALARMTYPE',
-          'ALRAMTEMPH',
-          'ALRAMTMEPL',
-          'TEL',
-          'AWS',
-        ],
-        where: {
-          CID: createDto.CID,
-        },
-        order: { logTime: 'DESC' },
-      })) ?? null;
-    console.log(latestSetting);
+    /**
+     * 최근 정보 불러오기
+     */
+    const latestSetting = await this.findLatestControllerSetting(createDto.CID);
 
+    /**
+     * 세팅이 없으면 생성,
+     * 최근 세팅이 있고 세팅이 다르면 갱신
+     */
     if (!latestSetting) {
       const createSetting =
         this.controllersSettingRepository.create(newSetting);
       this.controllersSettingRepository.save(createSetting);
       return createSetting; // 여기서 함수를 종료합니다.
-      /**
-       * 최신 값이 있고 값이 다르면 갱신
-       */
+
     } else if (!this.areObjectsEqual(latestSetting, newSetting)) {
       console.log('ah');
       const updatedSetting =
@@ -83,5 +70,38 @@ export class ControllerService {
       }
     }
     return true; // 모든 키에 대해 값이 같다면, 두 객체는 동일합니다.
+  }
+
+  /**
+   * CID와 SID를 기준으로 센서 최신 값 가져오기
+   * @param CID
+   * @param SID
+   */
+  async findLatestControllerSetting(CID: string) {
+    return (
+      (await this.controllersSettingRepository.findOne({
+        select: [
+          'CID',
+          'SETTEMP',
+          'TEMPGAP',
+          'HEATTEMP',
+          'ICETYPE',
+          'ALARMTYPE',
+          'ALRAMTEMPH',
+          'ALRAMTMEPL',
+          'TEL',
+          'AWS',
+        ],
+        where: { CID },
+        order: { logTime: 'DESC' },
+      })) ?? null
+    );
+  }
+
+  /**
+   * 바디를 크리에이트 DTO로 받아와서 mqtt로 전송
+   */
+  parseWithSettingDTO(){
+
   }
 }
