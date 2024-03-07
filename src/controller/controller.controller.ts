@@ -18,9 +18,8 @@ export class ControllerController {
     return this.controllerService.findLatestControllerSetting(CID);
   }
 
-  @Post()
-  postControllerSetting(@Body() body: CreateSensorValueDto) {
-    console.log(body);
-    // return this.httpService.postWithPublish(req, res)
-  }
+  /**
+   * 유저 정보에 따른 컨트롤러 목록 가져오기
+   */
+
 }

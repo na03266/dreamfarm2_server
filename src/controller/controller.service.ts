@@ -12,7 +12,7 @@ export class ControllerService {
   ) {}
 
   /**
-   * ControllerSetting DB insert 로직
+   * ControllerSetting DB insert
    * @param createDto
    */
   async createControllerSetting(
@@ -34,14 +34,11 @@ export class ControllerService {
       AWS: parseInt(createDto.AWS, 10),
     };
 
-    /**
-     * 최근 정보 불러오기
-     */
     const latestSetting = await this.findLatestControllerSetting(createDto.CID);
 
     /**
-     * 세팅이 없으면 생성,
-     * 최근 세팅이 있고 세팅이 다르면 갱신
+     * 세팅이 없으면 삽입
+     * 최근 세팅이 있고 세팅이 다르면 삽입
      */
     if (!latestSetting) {
       const createSetting =
@@ -73,9 +70,8 @@ export class ControllerService {
   }
 
   /**
-   * CID와 SID를 기준으로 센서 최신 값 가져오기
+   * CID 를 기준으로 센서 최신 값 가져오기
    * @param CID
-   * @param SID
    */
   async findLatestControllerSetting(CID: string) {
     return (
@@ -98,10 +94,4 @@ export class ControllerService {
     );
   }
 
-  /**
-   * 바디를 크리에이트 DTO로 받아와서 mqtt로 전송
-   */
-  parseWithSettingDTO(){
-
-  }
 }

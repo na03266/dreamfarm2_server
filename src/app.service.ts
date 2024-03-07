@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UnitService } from './unit/unit.service';
-import {
-  CTRL_SETTING,
-  MixedPayloadArray,
-  SENSOR_SETTING,
-  SENSOR_VALUE,
-  UNIT_SETTING,
-  UNIT_STATUS,
-} from './const/interfaces';
+import { MixedPayloadArray } from './const/interfaces';
 import { MqttDto } from './const/mqtt.dto';
 import { ControllerService } from './controller/controller.service';
 import { CreateControllersSettingDto } from './controller/dto/create-controllers-setting.dto';
@@ -157,5 +150,4 @@ export class AppService {
   /**
    * mqtt 발행 서비스
    */
-
 }

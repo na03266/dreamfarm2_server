@@ -22,6 +22,22 @@ export class HttpService {
         sendData = {
           CTRL_SETTING: req.body,
         };
+      } else if ('UTIMER' === key) {
+        sendData = {
+          UNIT_SETTING: req.body,
+        };
+      } else if ('STATUS' === key) {
+        sendData = {
+          UNIT_STATUS: req.body,
+        };
+      } else if ('SEQ' === key) {
+        sendData = {
+          SENSOR_SETTING: req.body,
+        };
+      } else if ('VALUE' === key) {
+        sendData = {
+          SENSOR_VALUE: req.body,
+        };
       }
     }
 
