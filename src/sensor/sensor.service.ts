@@ -49,7 +49,6 @@ export class SensorService {
       this.sensorsSettingRepository.save(createSetting);
       return createSetting; // 여기서 함수를 종료합니다.
     } else if (!this.areSettingObjectsEqual(latestSetting, newSetting)) {
-      console.log('ah');
       const updatedSetting = this.sensorsSettingRepository.create(newSetting);
       await this.sensorsSettingRepository.save(updatedSetting);
       return updatedSetting;

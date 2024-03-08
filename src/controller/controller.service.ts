@@ -47,7 +47,6 @@ export class ControllerService {
       return createSetting; // 여기서 함수를 종료합니다.
 
     } else if (!this.areObjectsEqual(latestSetting, newSetting)) {
-      console.log('ah');
       const updatedSetting =
         this.controllersSettingRepository.create(newSetting);
       await this.controllersSettingRepository.save(updatedSetting);

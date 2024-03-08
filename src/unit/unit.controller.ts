@@ -14,8 +14,9 @@ export class UnitController {
     return this.unitService.findLatestUnitSettings(CID);
   }
 
+
   @Get('statuses/:CID')
   getUnitStatuses(@Param('CID') CID: string) {
-    // return this.unitService.tfindLatestUnitStatus(CID);
+    return this.unitService.findLatestUnitStatuses(CID);
   }
 }

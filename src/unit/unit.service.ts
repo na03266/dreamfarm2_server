@@ -168,7 +168,6 @@ export class UnitService {
       this.unitsStatusRepository.save(createSetting);
       return createSetting; // 여기서 함수를 종료합니다.
     } else if (!this.areStatusObjectsEqual(latestSetting, newSetting)) {
-      console.log('ah');
       const updatedSetting = this.unitsStatusRepository.create(newSetting);
       await this.unitsStatusRepository.save(updatedSetting);
       return updatedSetting;
@@ -209,4 +208,29 @@ export class UnitService {
     );
   }
 
+  /**
+   * CID 값에 해당하는 모든 UID 값들을 불러옴 (최신정보 기준)
+   * @param CID
+   */
+  async findLatestUnitStatuses(CID: string) {
+    // 먼저, 각 UID별로 최신 logTime 찾기
+    const subQuery = this.unitsStatusRepository
+      .createQueryBuilder('us')
+      .select('MAX(us.logTime)', 'maxLogTime')
+      .addSelect('us.UID')
+      .where('us.CID = :CID', { CID })
+      .groupBy('us.UID')
+      .getQuery();
+
+    // 찾은 logTime을 사용하여 각 UID의 최신 상태 가져오기
+    const latestStatuses = await this.unitsStatusRepository
+      .createQueryBuilder('us')
+      .select(['us.CID', 'us.UID', 'us.MODE', 'us.STATUS'])
+      .where('us.CID = :CID', { CID })
+      .andWhere(`(us.UID, us.logTime) IN (${subQuery})`)
+      .setParameters({ CID })
+      .getMany();
+
+    return latestStatuses ?? null;
+  }
 }

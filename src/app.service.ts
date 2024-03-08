@@ -44,7 +44,6 @@ export class AppService {
       }
     } else {
       // mqttData가 문자열이 아닌 경우, 이미 객체 형태일 수 있으므로 직접 로깅
-      // console.log(`Data is not a string, logging directly:`, mqttData);
       return this.processData(mqttData);
     }
   }
@@ -55,42 +54,40 @@ export class AppService {
    * @param data
    */
   processData(data: MqttDto) {
-    // CTRL_SETTING 처리
-    if (data.CTRL_SETTING) {
-      this.processCtrlSetting(data.CTRL_SETTING);
-    }
+    this.processDataField(
+      data.CTRL_SETTING,
+      this.processCtrlSetting.bind(this),
+    );
+    this.processDataField(
+      data.UNIT_SETTING,
+      this.processUnitSetting.bind(this),
+    );
+    this.processDataField(data.UNIT_STATUS, this.processUnitStatus.bind(this));
+    this.processDataField(
+      data.SENSOR_SETTING,
+      this.processSensorSetting.bind(this),
+    );
+    this.processDataField(
+      data.SENSOR_VALUE,
+      this.processSensorValue.bind(this),
+    );
+  }
 
-    if (data.UNIT_SETTING) {
-      console.log(data.UNIT_SETTING);
-      // UNIT_SETTING 배열 처리
-      data.UNIT_SETTING.forEach((setting) => {
-        // this.processUnitSetting(setting);
-        // console.log(data.UNIT_SETTING);
-      });
-    }
+  /**
+   * 배열 또는 단일 객체 데이터 필드 처리
+   * @param field 데이터 객체 내의 필드 (예: UNIT_SETTING, SENSOR_SETTING 등)
+   * @param processFunction 해당 데이터 필드에 대해 적용할 처리 함수
+   */
+  private processDataField(
+    field: any,
+    processFunction: (setting: any) => void,
+  ) {
+    if (!field) return;
 
-    if (data.UNIT_STATUS) {
-      // UNIT_STATUS 배열 처리
-      data.UNIT_STATUS.forEach((setting) => {
-        this.processUnitStatus(setting);
-        // console.log(data.SENSOR_SETTING);
-      });
-    }
-
-    if (data.SENSOR_SETTING) {
-      // SENSOR_SETTING 배열 처리
-      data.SENSOR_SETTING.forEach((setting) => {
-        this.processSensorSetting(setting);
-        // console.log(data.SENSOR_SETTING);
-      });
-    }
-
-    if (data.SENSOR_VALUE) {
-      // SENSOR_VALUE 배열 처리
-      data.SENSOR_VALUE.forEach((setting) => {
-        this.processSensorValue(setting);
-        // console.log(data.SENSOR_SETTING);
-      });
+    if (Array.isArray(field)) {
+      field.forEach((setting) => processFunction(setting));
+    } else {
+      processFunction(field);
     }
   }
 
