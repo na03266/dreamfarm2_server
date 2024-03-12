@@ -19,7 +19,8 @@ import { UnitsModel } from './unit/entities/units.entity';
 import { SensorsModel } from './sensor/entities/sensors.entity';
 import { SensorsSettingModel } from './sensor/entities/sensors.setting.entity';
 import { SensorsValueModel } from './sensor/entities/sensors.value.entity';
-import { UnitService } from './unit/unit.service';
+import { OutboundResponseSerializer } from "./common/object-utils";
+import { ScheduleModule } from "@nestjs/schedule";
 
 const clients = ClientsModule.register([
   {
@@ -29,12 +30,15 @@ const clients = ClientsModule.register([
       url: `mqtt://${HOST}:${MQTT_PORT}`,
       username: MQTT_USER_ID,
       password: MQTT_USER_PW,
-    },
+      serializer: new OutboundResponseSerializer(),
+
+},
   },
 ]);
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(), // 스케줄 모듈 추가
     clients,
     UsersModule,
     CommonModule,

@@ -1,5 +1,5 @@
-import { Controller, Inject } from "@nestjs/common";
-import { ClientProxy, MessagePattern, Payload } from "@nestjs/microservices";
+import { Controller, Inject } from '@nestjs/common';
+import { ClientProxy, MessagePattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { MQTT_TOPIC } from './const/env.const';
 
@@ -7,7 +7,7 @@ import { MQTT_TOPIC } from './const/env.const';
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    @Inject('MY_MQTT_SERVICE') private readonly client: ClientProxy // 클라이언트 주입
+    @Inject('MY_MQTT_SERVICE') private readonly client: ClientProxy, // 클라이언트 주입
   ) {}
 
   /**

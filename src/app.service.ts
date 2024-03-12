@@ -123,7 +123,7 @@ export class AppService {
   }
 
   /**
-   * 센서 세팅값 자료형 변환
+   * 센서 세팅 자료형 변환
    * @param setting
    * @private
    */
@@ -143,8 +143,4 @@ export class AppService {
     // SENSOR_VALUE 관련 로직 구현
     return this.sensorService.createSensorValue(setting);
   }
-
-  /**
-   * mqtt 발행 서비스
-   */
 }
