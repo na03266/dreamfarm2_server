@@ -7,7 +7,7 @@ import { ControllersModel } from '../../controller/entities/controllers.entity';
 export class UsersModel {
 
   /**
-   * 이메일, 주소, 이름, 휴대전화, 아이디
+   *  아이디, 비밀번호, 이름, 폰, 주소, 역할
    */
   @PrimaryColumn()
   userId: string;
@@ -25,6 +25,11 @@ export class UsersModel {
     nullable: true,
   })
   phoneNumber: string;
+
+  @Column({
+    nullable: true,
+  })
+  address: string;
 
   @Column({
     enum: Object.values(RolesEnum),
