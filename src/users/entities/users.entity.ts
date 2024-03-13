@@ -5,7 +5,6 @@ import { ControllersModel } from '../../controller/entities/controllers.entity';
 
 @Entity()
 export class UsersModel {
-
   /**
    *  아이디, 비밀번호, 이름, 폰, 주소, 역할
    */
@@ -19,7 +18,6 @@ export class UsersModel {
     nullable: true,
   })
   name: string;
-
 
   @Column({
     nullable: true,
