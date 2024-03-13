@@ -175,7 +175,7 @@ export class AuthService {
    *  3. 모두 통과되면 찾응 사용자 정보 반환
    *  4. loginWithId 에서 반환된 데이터를 기반으로 토큰 생성
    */
-  async authenticateWithEmailAndPassword(
+  async authenticateWithIdAndPassword(
     user: Pick<UsersModel, 'userId' | 'password'>,
   ) {
     /**
@@ -207,7 +207,7 @@ export class AuthService {
    * 로그인
    */
   async loginWithId(user: Pick<UsersModel, 'userId' | 'password'>) {
-    const existingUser = await this.authenticateWithEmailAndPassword(user);
+    const existingUser = await this.authenticateWithIdAndPassword(user);
     return this.loginUser(existingUser);
   }
 
