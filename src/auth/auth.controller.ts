@@ -1,8 +1,15 @@
-import { Controller, Headers, Post, UseGuards, Request, Body } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RefreshTokenGuard } from './guard/bearer-token.guard';
-import { BasicTokenGuard } from "./guard/basic-token.guard";
-import { RegisterUserDto } from "./dto/register-user.dto";
+import { BasicTokenGuard } from './guard/basic-token.guard';
+import { UsersModel } from '../users/entities/users.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -29,9 +36,7 @@ export class AuthController {
    */
   @Post('token/refresh')
   @UseGuards(RefreshTokenGuard)
-  postTokenRefresh(
-    @Headers('authorization') rawToken: string
-  ){
+  postTokenRefresh(@Headers('authorization') rawToken: string) {
     const token = this.authService.extractTokenFromHeader(rawToken, true);
 
     const newToken = this.authService.rotateToken(token, true);
@@ -39,9 +44,9 @@ export class AuthController {
     /**
      * {refreshToken: {token}}
      */
-    return{
+    return {
       refreshToken: newToken,
-    }
+    };
   }
 
   /**
@@ -51,10 +56,7 @@ export class AuthController {
    */
   @Post('login/id')
   @UseGuards(BasicTokenGuard)
-  postLoginId(
-    @Headers('authorization') rawToken: string,
-    @Request() req
-  ) {
+  postLoginId(@Headers('authorization') rawToken: string, @Request() req) {
     // userId: password -> Base64
     // asdflkjasjhdfjklhas -> email:password
     const token = this.authService.extractTokenFromHeader(rawToken, false);
@@ -69,12 +71,7 @@ export class AuthController {
    * @param body
    */
   @Post('register/id')
-  postRegisterId(
-    @Body()body:RegisterUserDto
-    // @Body('nickname') nickname: string,
-    // @Body('email') email: string,
-    // @Body('password', new MaxLengthPipe(8), new MinLenghtPipe(3)) password: string,
-  ) {
+  postRegisterId(@Body() body: UsersModel) {
     return this.authService.registerWithId(body);
   }
 }

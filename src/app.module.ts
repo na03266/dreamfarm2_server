@@ -19,8 +19,9 @@ import { UnitsModel } from './unit/entities/units.entity';
 import { SensorsModel } from './sensor/entities/sensors.entity';
 import { SensorsSettingModel } from './sensor/entities/sensors.setting.entity';
 import { SensorsValueModel } from './sensor/entities/sensors.value.entity';
-import { OutboundResponseSerializer } from "./common/object-utils";
-import { ScheduleModule } from "@nestjs/schedule";
+import { OutboundResponseSerializer } from './common/object-utils';
+import { ScheduleModule } from '@nestjs/schedule';
+import { AppGateway } from "./gatewatys/app.gateway";
 
 const clients = ClientsModule.register([
   {
@@ -31,8 +32,7 @@ const clients = ClientsModule.register([
       username: MQTT_USER_ID,
       password: MQTT_USER_PW,
       serializer: new OutboundResponseSerializer(),
-
-},
+    },
   },
 ]);
 
@@ -69,7 +69,11 @@ const clients = ClientsModule.register([
     UnitModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    AppGateway,
+    // WebRtcGateway
+  ],
   exports: [clients], // 다른 모듈에서 쓸 수 있게 출력
 })
 export class AppModule {}

@@ -10,7 +10,6 @@ import { AuthService } from '../auth.service';
 export class BasicTokenGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
-
   /**
    * 1) 요청 객체(request)를 불러오고
    *      authorization header 로부터 토큰을 가져온다.
@@ -29,7 +28,7 @@ export class BasicTokenGuard implements CanActivate {
    * @param context
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getResponse();
+    const req = context.switchToHttp().getRequest();
 
     const rawToken = req.headers['authorization'];
 

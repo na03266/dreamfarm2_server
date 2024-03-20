@@ -41,15 +41,16 @@ export class BearerTokenGuard implements CanActivate {
     return true;
   }
 }
+
 @Injectable()
-export class AccessTokenGuard extends BearerTokenGuard{
+export class AccessTokenGuard extends BearerTokenGuard {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     await super.canActivate(context);
 
     const req = context.switchToHttp().getRequest();
 
-    if(req.tokenType !== 'access'){
-      throw new UnauthorizedException('Access Token이 아닙니다.')
+    if (req.tokenType !== 'access') {
+      throw new UnauthorizedException('Access Token이 아닙니다.');
     }
 
     return true;
@@ -57,14 +58,14 @@ export class AccessTokenGuard extends BearerTokenGuard{
 }
 
 @Injectable()
-export class RefreshTokenGuard extends BearerTokenGuard{
+export class RefreshTokenGuard extends BearerTokenGuard {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     await super.canActivate(context);
 
     const req = context.switchToHttp().getRequest();
 
-    if(req.tokenType !== 'refresh'){
-      throw new UnauthorizedException('Refresh Token이 아닙니다.')
+    if (req.tokenType !== 'refresh') {
+      throw new UnauthorizedException('Refresh Token이 아닙니다.');
     }
 
     return true;

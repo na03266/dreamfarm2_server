@@ -69,6 +69,7 @@ export class AuthService {
     }
   }
 
+  //
   /**
    * 토큰 재발급
    */
@@ -93,23 +94,24 @@ export class AuthService {
   /**
    * 베이직 토큰 디코딩
    */
-  decodeBasicToken(base64String: string){
+  decodeBasicToken(base64String: string) {
     const decoded = Buffer.from(base64String, 'base64').toString('utf-8');
 
     const split = decoded.split(':');
 
-    if (split.length !== 2){
-      throw new UnauthorizedException('잘못된 유형의 토큰입니다!')
+    if (split.length !== 2) {
+      throw new UnauthorizedException('잘못된 유형의 토큰입니다!');
     }
 
-    const userId = split[0]
+    const userId = split[0];
     const password = split[1];
 
-    return{
+    return {
       userId,
-      password
-    }
+      password,
+    };
   }
+
   /**
    * 1) registerWithId
    *      - Id, name, password를 입력받고 사용자를 생성한다.
@@ -215,7 +217,7 @@ export class AuthService {
    * 회원가입, 성공시 바로 로그인
    * @param user
    */
-  async registerWithId(user: RegisterUserDto) {
+  async registerWithId(user: UsersModel) {
     const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
 
     const newUser = await this.usersService.createUser({

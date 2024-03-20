@@ -4,7 +4,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { HOST, MQTT_PORT, MQTT_USER_ID, MQTT_USER_PW } from './const/env.const';
 import { HttpModule } from './http.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { OutboundResponseSerializer } from "./common/object-utils";
+import { OutboundResponseSerializer } from './common/object-utils';
 
 async function bootstrap() {
   // @ts-ignore

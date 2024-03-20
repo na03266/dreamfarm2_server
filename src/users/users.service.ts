@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersModel } from './entities/users.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +15,6 @@ export class UsersService {
    * 사용자 계정 생성
    */
   async createUser(user: CreateUserDto) {
-
     /**
      * 동일 id 존재 하는지 확인하는 조건
      */
