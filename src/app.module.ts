@@ -21,7 +21,7 @@ import { SensorsSettingModel } from './sensor/entities/sensors.setting.entity';
 import { SensorsValueModel } from './sensor/entities/sensors.value.entity';
 import { OutboundResponseSerializer } from './common/object-utils';
 import { ScheduleModule } from '@nestjs/schedule';
-import { AppGateway } from "./gatewatys/app.gateway";
+import { WebsocketsGateway } from "./gatewatys/websockets.gateway";
 
 const clients = ClientsModule.register([
   {
@@ -71,7 +71,7 @@ const clients = ClientsModule.register([
   controllers: [AppController],
   providers: [
     AppService,
-    AppGateway,
+    WebsocketsGateway,
     // WebRtcGateway
   ],
   exports: [clients], // 다른 모듈에서 쓸 수 있게 출력
