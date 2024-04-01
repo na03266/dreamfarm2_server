@@ -108,9 +108,10 @@ export class ControllerService {
    * 만약 기존에 정보가 있다면 업데이트
    * @param createDto : CID, userId
    */
-  async updateControllerOfUser(
-    createDto: ControllerToUserDto,
-  ): Promise<ControllersModel> {
+  async updateControllerOfUser(createDto: {
+    CID: string;
+    userId: string;
+  }): Promise<ControllersModel> {
     const newSetting = {
       CID: createDto.CID,
       user: { userId: createDto.userId },
@@ -124,7 +125,9 @@ export class ControllerService {
     return createSetting;
   }
 
-  // 아이디에 할당된 컨트롤러 목록 불러오기
+  /**
+   * 아이디에 할당된 컨트롤러 목록 불러오기
+   */
   async getControllersById(id: string) {
     const controller = await this.controllersRepository.find({
       where: {
