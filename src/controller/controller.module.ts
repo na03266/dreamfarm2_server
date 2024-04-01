@@ -4,15 +4,21 @@ import { ControllerController } from './controller.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModel } from '../users/entities/users.entity';
 import { ControllersSettingModel } from './entities/controllers.setting.entity';
-import { AppModule } from '../app.module';
-import { HttpService } from "../http.service";
+import { ControllersModel } from './entities/controllers.entity';
+import { AuthService } from '../auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ControllersSettingModel, UsersModel]),
+    TypeOrmModule.forFeature([
+      ControllersSettingModel,
+      UsersModel,
+      ControllersModel,
+    ]),
   ],
   controllers: [ControllerController],
-  providers: [ControllerService],
+  providers: [ControllerService, AuthService, JwtService, UsersService],
   exports: [ControllerService],
 })
 export class ControllerModule {}

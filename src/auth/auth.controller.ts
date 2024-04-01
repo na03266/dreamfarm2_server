@@ -68,6 +68,8 @@ export class AuthController {
 
   /**
    * 바디값에 담긴 정보로 회원가입
+   * 회원 추가 시 PostMan 같은 툴을 이용해서 http://livewalk901.iptime.org/auth/register/id 주소에서
+   * 바디에 userId, password, {name, phoneNumber, address, role}(없어도 됨) 을 넣은 후 전송
    * @param body
    */
   @Post('register/id')

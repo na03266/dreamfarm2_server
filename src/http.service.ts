@@ -2,7 +2,6 @@ import { HttpStatus, Inject, Injectable, Req, Res } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MQTT_TOPIC } from './const/env.const';
 import { Request, Response } from 'express';
-import { take } from 'rxjs';
 
 @Injectable()
 export class HttpService {

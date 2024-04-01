@@ -1,14 +1,25 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { ControllersSettingModel } from './entities/controllers.setting.entity';
 import { Repository } from 'typeorm';
-import { CreateControllersSettingDto } from './dto/create-controllers-setting.dto';
-import { Inject } from '@nestjs/common';
+import {
+  ControllerToUserDto,
+  CreateControllersSettingDto,
+} from './dto/create-controllers-setting.dto';
+import { Inject, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ControllersModel } from './entities/controllers.entity';
+import { ControllerController } from './controller.controller';
+import { UsersModel } from '../users/entities/users.entity';
+import { NotFoundError } from 'rxjs';
 
 export class ControllerService {
   constructor(
     @InjectRepository(ControllersSettingModel)
     private controllersSettingRepository: Repository<ControllersSettingModel>,
+    @InjectRepository(ControllersModel)
+    private controllersRepository: Repository<ControllersModel>,
+    @InjectRepository(UsersModel)
+    private usersRepository: Repository<UsersModel>,
   ) {}
 
   /**
@@ -45,7 +56,6 @@ export class ControllerService {
         this.controllersSettingRepository.create(newSetting);
       this.controllersSettingRepository.save(createSetting);
       return createSetting; // 여기서 함수를 종료합니다.
-
     } else if (!this.areObjectsEqual(latestSetting, newSetting)) {
       const updatedSetting =
         this.controllersSettingRepository.create(newSetting);
@@ -69,7 +79,7 @@ export class ControllerService {
   }
 
   /**
-   * CID 를 기준으로 센서 최신 값 가져오기
+   * CID 를 기준으로 최신 컨트롤러 세팅 값 가져오기
    * @param CID
    */
   async findLatestControllerSetting(CID: string) {
@@ -93,4 +103,39 @@ export class ControllerService {
     );
   }
 
+  /**
+   * 유저 아이디와 컨트롤러 아이디를 저장
+   * 만약 기존에 정보가 있다면 업데이트
+   * @param createDto : CID, userId
+   */
+  async updateControllerOfUser(
+    createDto: ControllerToUserDto,
+  ): Promise<ControllersModel> {
+    const newSetting = {
+      CID: createDto.CID,
+      user: { userId: createDto.userId },
+    };
+
+    const createSetting = this.controllersRepository.create(newSetting);
+    // save 메소드는 정보가 있다면 업데이트, 없다면 생성함
+    await this.controllersRepository.save(createSetting);
+    return createSetting;
+
+    return createSetting;
+  }
+
+  // 아이디에 할당된 컨트롤러 목록 불러오기
+  async getControllersById(id: string) {
+    const controller = await this.controllersRepository.find({
+      where: {
+        user: { userId: id },
+      },
+    });
+
+    // 없으면 못찾음 에러
+    if (!controller) {
+      throw new NotFoundException();
+    }
+    return controller;
+  }
 }

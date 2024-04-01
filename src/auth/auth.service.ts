@@ -18,7 +18,7 @@ export class AuthService {
    *
    * 1) 사용자가 로그인 또는 회원가입을 진행하면 accessToken 과 refreshToken 을 발급 받는다.
    * 2) 로그인 할때는 Basic 토큰과 함께 요청을 보낸다.
-   *    Basic 토큰은 '이메일:비밀번호'를 Base64로 인코딩한 형태이다.
+   *    Basic 토큰은 '이메일:비밀번호'를 Base64로 인코딩한 형태
    *    예) {authorization: 'Basic {token}'}
    *
    * 3) 아무나 접근할 수 없는 정보 (private route)를 접근 할때는 accessToken 을 Header 에 추가해서 요청과 함께 보낸다.
@@ -144,7 +144,7 @@ export class AuthService {
    */
   signToken(
     user: Pick<UsersModel, 'userId' | 'name'>,
-    isRefreshToken: Boolean,
+    isRefreshToken: boolean,
   ) {
     const payload = {
       userid: user.userId,
@@ -155,7 +155,7 @@ export class AuthService {
     return this.jwtService.sign(payload, {
       secret: JWT_SECRET,
       // seconds
-      expiresIn: isRefreshToken ? 3600 : 300,
+      expiresIn: isRefreshToken ? 360000 : 30000,
     });
   }
 
@@ -183,7 +183,7 @@ export class AuthService {
     /**
      *    1. 사용자가 존재하는지 확인(email)
      *    2. 비밀번호가 맞는지 확인
-     *    3. 모두 통과되면 찾응 사용자 정보 반환
+     *    3. 모두 통과되면 찾은 사용자 정보 반환
      */
     const existingUser = await this.usersService.getUserById(user.userId);
 
@@ -225,5 +225,19 @@ export class AuthService {
       password: hash,
     });
     return this.loginUser(newUser);
+  }
+
+  /**
+   * 토큰에서 ID 만 추출하는 로직
+   */
+  async extractIdFromToken(token: string): Promise<string | null> {
+    try {
+      const decodedToken = this.jwtService.verify(token, {
+        secret: JWT_SECRET,
+      });
+      return decodedToken.userid; // 사용자 ID 추출
+    } catch (error) {
+      return null; // 토큰 검증 실패 시 처리
+    }
   }
 }

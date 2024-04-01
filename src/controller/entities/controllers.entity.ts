@@ -19,15 +19,5 @@ export class ControllersModel extends BaseModel {
   @JoinColumn({ name: 'userId' })
   user: UsersModel;
 
-  /**
-   * 유닛 세팅 일대다
-   */
-  @OneToMany(() => UnitsModel, (unit) => unit.UID)
-  units: UnitsModel[];
 
-  /**
-   * 센서 세팅 일대다
-   */
-  @OneToMany(() => SensorsModel, (sensorId) => sensorId.CID)
-  sensors: SensorsModel[];
 }
