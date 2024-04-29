@@ -3,7 +3,7 @@ import { UnitService } from './unit/unit.service';
 import { MixedPayloadArray } from './const/interfaces';
 import { MqttDto } from './const/mqtt.dto';
 import { ControllerService } from './controller/controller.service';
-import { CreateControllersSettingDto } from './controller/dto/create-controllers-setting.dto';
+import { CreateControllersDto } from './controller/dto/create-controllers.dto';
 import { SensorService } from './sensor/sensor.service';
 import { CreateUnitSettingDto } from './unit/dto/create-unit-setting.dto';
 import { CreateUnitStatusDto } from './unit/dto/create-unit-status.dto';
@@ -96,7 +96,7 @@ export class AppService {
    * @param setting
    * @private
    */
-  private processCtrlSetting(setting: CreateControllersSettingDto) {
+  private processCtrlSetting(setting: CreateControllersDto) {
     // console.log('Processing CTRL_SETTING:', setting);
     return this.controllerService.createControllerSetting(setting);
   }

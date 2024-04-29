@@ -18,6 +18,4 @@ export class ControllersModel extends BaseModel {
   @ManyToOne(() => UsersModel, (user) => user.controllers)
   @JoinColumn({ name: 'userId' })
   user: UsersModel;
-
-
 }

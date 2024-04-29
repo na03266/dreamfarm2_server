@@ -3,8 +3,8 @@ import { ControllersSettingModel } from './entities/controllers.setting.entity';
 import { Repository } from 'typeorm';
 import {
   ControllerToUserDto,
-  CreateControllersSettingDto,
-} from './dto/create-controllers-setting.dto';
+  CreateControllersDto,
+} from './dto/create-controllers.dto';
 import { Inject, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ControllersModel } from './entities/controllers.entity';
@@ -27,7 +27,7 @@ export class ControllerService {
    * @param createDto
    */
   async createControllerSetting(
-    createDto: CreateControllersSettingDto,
+    createDto: CreateControllersDto,
   ): Promise<ControllersSettingModel> {
     /**
      * 일단 값 변환

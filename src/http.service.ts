@@ -9,9 +9,9 @@ export class HttpService {
 
   async postWithPublish(@Req() req: Request, @Res() res?: Response) {
     // GET 방식으로 데이터를 받아서 처리
-    let originalData: any = req.body;
+    const originalData: any = req.body;
     const { pattern, id, ...dataWithoutPatternAndId } = originalData;
-    let sendData: any = dataWithoutPatternAndId;
+    const sendData: any = dataWithoutPatternAndId;
 
     console.log(sendData);
     // MQTT를 통해 데이터 발행

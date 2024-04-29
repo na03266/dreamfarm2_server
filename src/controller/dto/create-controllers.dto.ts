@@ -1,6 +1,6 @@
 import { UsersModel } from '../../users/entities/users.entity';
 
-export class CreateControllersSettingDto {
+export class CreateControllersDto {
   CID: string;
   SETTEMP?: string;
   TEMPGAP?: string;

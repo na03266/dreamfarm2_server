@@ -13,6 +13,7 @@ export class HttpController {
 
   @Post('send')
   async handleGetRequest(@Req() req: Request, @Res() res?: Response) {
-    return this.httpService.postWithPublish(req, res);
+    const postData = await this.httpService.postWithPublish(req, res);
+    return postData;
   }
 }

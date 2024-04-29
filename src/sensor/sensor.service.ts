@@ -16,7 +16,7 @@ export class SensorService {
   ) {}
 
   /**
-   * SensorSetting DB insert
+   * SensorSetting DB insert (CID 와 SID 동시 기준)
    * @param createDto
    */
   async createSensorSetting(
@@ -75,6 +75,56 @@ export class SensorService {
   }
 
   /**
+   * CID와 SID를 기준으로 센서 최신 세팅 가져오기
+   * @param CID
+   * @param SID
+   */
+  async findLatestSensorSetting(CID: string, SID: string) {
+    return (
+      (await this.sensorsSettingRepository.findOne({
+        select: ['CID', 'SID', 'SCH', 'SRESERVERD', 'SMULT', 'SOFFSET', 'SEQ'],
+        where: { CID, SID },
+        order: { logTime: 'DESC' },
+      })) ?? null
+    );
+  }
+
+  /**
+   * CID 값에 해당하는 각각의 SID 의 VALUE 들을 불러옴 (최신정보 기준)
+   * @param CID
+   */
+  async findLatestSensorSettings(CID: string) {
+    // 먼저, 각 UID별로 최신 logTime 찾기
+    const subQuery = this.sensorsSettingRepository
+      .createQueryBuilder('us')
+      .select('MAX(us.logTime)', 'maxLogTime')
+      .addSelect('us.SID')
+      .where('us.CID = :CID', { CID })
+      .groupBy('us.SID')
+      .getQuery();
+
+    // 찾은 logTime을 사용하여 각 SID의 최신 상태 가져오기
+    const latestStatuses = await this.sensorsSettingRepository
+      .createQueryBuilder('us')
+      .select([
+        'us.CID',
+        'us.SID',
+        'us.VALUE',
+        'us.SCH',
+        'us.SRESERVERD',
+        'us.SMULT',
+        'us.SOFFSET',
+        'us.SEQ',
+      ])
+      .where('us.CID = :CID', { CID })
+      .andWhere(`(us.SID, us.logTime) IN (${subQuery})`)
+      .setParameters({ CID })
+      .getMany();
+
+    return latestStatuses ?? null;
+  }
+
+  /**
    * SensorValue DB insert
    * @param createDto
    */
@@ -130,21 +180,6 @@ export class SensorService {
   }
 
   /**
-   * CID와 SID를 기준으로 센서 최신 세팅 가져오기
-   * @param CID
-   * @param SID
-   */
-  async findLatestSensorSetting(CID: string, SID: string) {
-    return (
-      (await this.sensorsSettingRepository.findOne({
-        select: ['CID', 'SID', 'SCH', 'SRESERVERD', 'SMULT', 'SOFFSET', 'SEQ'],
-        where: { CID, SID },
-        order: { logTime: 'DESC' },
-      })) ?? null
-    );
-  }
-
-  /**
    * CID와 SID를 기준으로 센서 최신 값 가져오기
    * @param CID
    * @param SID
@@ -160,17 +195,46 @@ export class SensorService {
   }
 
   /**
-   * CID와 SID를 기준으로 센서 최신 값 가져오기
+   * CID 값에 해당하는 각각의 SID 의 VALUE 들을 불러옴 (최신정보 기준)
    * @param CID
-   * @param SID
    */
-  async ttfindLatestSensorValue(CID: string, SID: string) {
-    return (
-      (await this.sensorsValueRepository.findOne({
-        select: ['CID', 'SID', 'VALUE'],
-        where: { CID, SID },
-        order: { logTime: 'DESC' },
-      })) ?? null
-    );
+  async findLatestSensorValues(CID: string) {
+    // 먼저, 각 UID별로 최신 logTime 찾기
+    const subQuery = this.sensorsValueRepository
+      .createQueryBuilder('us')
+      .select('MAX(us.logTime)', 'maxLogTime')
+      .addSelect('us.SID')
+      .where('us.CID = :CID', { CID })
+      .groupBy('us.SID')
+      .getQuery();
+
+    // 찾은 logTime을 사용하여 각 SID의 최신 상태 가져오기
+    const latestStatuses = await this.sensorsValueRepository
+      .createQueryBuilder('us')
+      .select(['us.CID', 'us.SID', 'us.VALUE'])
+      .where('us.CID = :CID', { CID })
+      .andWhere(`(us.SID, us.logTime) IN (${subQuery})`)
+      .setParameters({ CID })
+      .getMany();
+
+    return latestStatuses ?? null;
+  }
+
+  async findSensorValuesByDayRange(
+    CID: string,
+    startDate: Date,
+    endDate: Date,
+  ) {
+    const sensorValues = await this.sensorsValueRepository
+      .createQueryBuilder('us')
+      .select(['us.CID', 'us.SID', 'us.VALUE', 'DATE(us.logTime) AS logDate'])
+      .where('us.CID = :CID', { CID })
+      .andWhere('us.logTime BETWEEN :startDate AND :endDate', {
+        startDate,
+        endDate,
+      })
+      .getRawMany();
+
+    return sensorValues ?? null;
   }
 }

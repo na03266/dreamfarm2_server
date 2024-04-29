@@ -16,7 +16,7 @@ export class UnitService {
   ) {}
 
   /**
-   * UnitSetting DB insert 로직
+   * UnitSetting DB insert 로직 (CID, UID 동시 조건)
    * @param createDto
    */
   async createUnitSetting(
@@ -110,32 +110,43 @@ export class UnitService {
   }
 
   /**
-   * CID 를 기준으로 유닛 최신 세팅 1개씩 가져오기
+   * CID 값에 해당하는 각각의 UID 의 Status 들을 불러옴 (최신정보 기준)
    * @param CID
-   * @param UID
    */
   async findLatestUnitSettings(CID: string) {
-    return (
-      (await this.unitsSettingRepository.find({
-        select: [
-          'CID',
-          'UID',
-          'UTYPE',
-          'UGROUP',
-          'UCH',
-          'UOPENCH',
-          'UCLOSECH',
-          'UMVTIME',
-          'USTTIME',
-          'UOPENTIME',
-          'UCLOSETIME',
-          'UOPTYPE',
-          'UTIMER',
-        ],
-        where: { CID },
-        order: { logTime: 'DESC' },
-      })) ?? null
-    );
+    // 먼저, 각 UID별로 최신 logTime 찾기
+    const subQuery = this.unitsSettingRepository
+      .createQueryBuilder('us')
+      .select('MAX(us.logTime)', 'maxLogTime')
+      .addSelect('us.UID')
+      .where('us.CID = :CID', { CID })
+      .groupBy('us.UID')
+      .getQuery();
+
+    // 찾은 logTime을 사용하여 각 UID의 최신 상태 가져오기
+    const latestSettings = await this.unitsSettingRepository
+      .createQueryBuilder('us')
+      .select([
+        'us.CID',
+        'us.UID',
+        'us.UTYPE',
+        'us.UGROUP',
+        'us.UCH',
+        'us.UOPENCH',
+        'us.UCLOSECH',
+        'us.UMVTIME',
+        'us.USTTIME',
+        'us.UOPENTIME',
+        'us.UCLOSETIME',
+        'us.UOPTYPE',
+        'us.UTIMER',
+      ])
+      .where('us.CID = :CID', { CID })
+      .andWhere(`(us.UID, us.logTime) IN (${subQuery})`)
+      .setParameters({ CID })
+      .getMany();
+
+    return latestSettings ?? null;
   }
 
   /**
@@ -209,7 +220,7 @@ export class UnitService {
   }
 
   /**
-   * CID 값에 해당하는 모든 UID 값들을 불러옴 (최신정보 기준)
+   * CID 값에 해당하는 각각의 UID 의 Status 들을 불러옴 (최신정보 기준)
    * @param CID
    */
   async findLatestUnitStatuses(CID: string) {
