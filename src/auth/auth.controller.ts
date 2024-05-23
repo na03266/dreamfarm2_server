@@ -65,7 +65,7 @@ export class AuthController {
 
     return this.authService.loginWithId(credentials);
   }
-
+//
   /**
    * 바디값에 담긴 정보로 회원가입
    * 회원 추가 시 PostMan 같은 툴을 이용해서 http://livewalk901.iptime.org/auth/register/id 주소에서

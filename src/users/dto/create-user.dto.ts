@@ -21,4 +21,8 @@ export class CreateUserDto {
   @IsOptional()
   @IsEnum(RolesEnum)
   role?: RolesEnum;
+
+  @IsOptional()
+  @IsString()
+  upperManager?: string;
 }

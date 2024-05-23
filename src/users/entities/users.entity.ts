@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { BaseModel } from '../../common/entyity/base.entity';
 import { RolesEnum } from '../const/roles.const';
 import { ControllersModel } from '../../controller/entities/controllers.entity';
@@ -37,4 +37,9 @@ export class UsersModel {
 
   @OneToMany(() => ControllersModel, (controller) => controller.user)
   controllers: ControllersModel[];
+
+  @Column({
+    nullable: true,
+  })
+  upperManager?: string;
 }

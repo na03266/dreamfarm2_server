@@ -143,27 +143,29 @@ export class AuthService {
    * @param isRefreshToken
    */
   signToken(
-    user: Pick<UsersModel, 'userId' | 'name'>,
+    user: Pick<UsersModel, 'userId' | 'name' | 'role'>,
     isRefreshToken: boolean,
   ) {
     const payload = {
       userid: user.userId,
       sub: user.name,
+      role: user.role,
       expiresIn: isRefreshToken ? 'refresh' : 'access',
     };
 
     return this.jwtService.sign(payload, {
       secret: JWT_SECRET,
       // seconds
-      expiresIn: isRefreshToken ? 360000 : 30000,
+      expiresIn: isRefreshToken ? 3600000 : 3600,
     });
   }
 
   /**
    * 회원가입과 로그인에서 필요한 토큰을 반환하는 로직
+   * id, pw check logic need
    * @param user
    */
-  loginUser(user: Pick<UsersModel, 'userId' | 'name'>) {
+  loginUser(user: Pick<UsersModel, 'userId' | 'name' | 'role'>) {
     return {
       accessToken: this.signToken(user, false),
       refreshToken: this.signToken(user, true),
@@ -178,6 +180,7 @@ export class AuthService {
    *  4. loginWithId 에서 반환된 데이터를 기반으로 토큰 생성
    */
   async authenticateWithIdAndPassword(
+    //
     user: Pick<UsersModel, 'userId' | 'password'>,
   ) {
     /**
@@ -196,7 +199,7 @@ export class AuthService {
      * 1) 입력된 비밀번호
      * 2) 기존 해시(hash) -> 사용자 정보에 저장되어 있는 hash
      */
-    const passOK = bcrypt.compare(user.password, existingUser.password);
+    const passOK = await bcrypt.compare(user.password, existingUser.password);
 
     if (!passOK) {
       throw new UnauthorizedException('비밀번호가 틀렸습니다.');
@@ -209,22 +212,34 @@ export class AuthService {
    * 로그인
    */
   async loginWithId(user: Pick<UsersModel, 'userId' | 'password'>) {
-    const existingUser = await this.authenticateWithIdAndPassword(user);
-    return this.loginUser(existingUser);
+    try {
+      const existingUser = await this.authenticateWithIdAndPassword(user);
+      return this.loginUser(existingUser);
+    } catch (e) {
+      throw UnauthorizedException;
+    }
   }
 
   /**
-   * 회원가입, 성공시 바로 로그인
-   * @param user
+   * 회원가입, 성공시 바로 success message
    */
   async registerWithId(user: UsersModel) {
     const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
 
-    const newUser = await this.usersService.createUser({
-      ...user,
-      password: hash,
-    });
-    return this.loginUser(newUser);
+    try {
+      const newUser = await this.usersService.createUser({
+        ...user,
+        password: hash,
+      });
+      return {
+        status: 'success',
+      };
+    } catch (e) {
+      return {
+        status: 'fail',
+        message: `${e.message}`,
+      };
+    }
   }
 
   /**

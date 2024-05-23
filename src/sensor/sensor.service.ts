@@ -109,7 +109,6 @@ export class SensorService {
       .select([
         'us.CID',
         'us.SID',
-        'us.VALUE',
         'us.SCH',
         'us.SRESERVERD',
         'us.SMULT',

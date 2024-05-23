@@ -1,5 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
+import { BasicTokenGuard } from '../auth/guard/basic-token.guard';
+import { BearerTokenGuard } from '../auth/guard/bearer-token.guard';
+import { UsersModel } from './entities/users.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -7,21 +20,25 @@ export class UsersController {
 
   /**
    * 모든 유저 정보 받기(관리자용)
+   * 관리자인 경우만 가능하도록 변경
    */
   @Get()
   getUsers() {
     return this.usersService.getAllUser();
   }
 
-  /**
-   * 유저 정보 바디로 유효값과 무효값을 모두 받아서 데이터베이스에 저장, 수정기능 추가
-   */
-  @Post()
-  postUser(
-    @Body('userId') userId: string,
-    @Body('userEmail') userEmail: string,
-    @Body('password') password: string,
-  ) {
-    // return this.usersService.createUser({userEmail,userId,password});
+  @Get(':id')
+  getUser(@Param('id') id: string) {
+    return this.usersService.getUserById(id);
+  }
+
+  @Patch(':id')
+  patchUser(@Param('id') id: string, @Body() body: CreateUserDto) {
+    return this.usersService.updateUserById(id, body);
+  }
+
+  @Delete(':id')
+  deleteUsers(@Param('id') id: string, @Body() Body: string[]) {
+    return this.usersService.deleteUser(id, Body);
   }
 }

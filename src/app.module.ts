@@ -21,7 +21,7 @@ import { SensorsSettingModel } from './sensor/entities/sensors.setting.entity';
 import { SensorsValueModel } from './sensor/entities/sensors.value.entity';
 import { OutboundResponseSerializer } from './common/object-utils';
 import { ScheduleModule } from '@nestjs/schedule';
-import { WebsocketsGateway } from "./gatewatys/websockets.gateway";
+import { WebsocketsGateway } from './gatewatys/websockets.gateway';
 
 const clients = ClientsModule.register([
   {
@@ -45,7 +45,7 @@ const clients = ClientsModule.register([
     TypeOrmModule.forRoot({
       //데이터베이스 타입
       type: 'postgres',
-      host: '127.0.0.1',
+      host: 'localhost',
       port: 5432,
       username: 'postgres',
       password: 'postgres',

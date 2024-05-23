@@ -23,13 +23,11 @@ export class ControllerController {
    * 유저에 할당된 컨트롤러 목록 가져오기
    * @param rawToken
    * @param req
-   * @param CID 유저 ID
    */
   @Get('/list')
   async getControllerListsOfUser(
     @Headers('authorization') rawToken: string,
     @Request() req,
-    @Param('CID') CID: string,
   ) {
     const token = this.authService.extractTokenFromHeader(rawToken, false);
     const extractedId = await this.authService.extractIdFromToken(token);
