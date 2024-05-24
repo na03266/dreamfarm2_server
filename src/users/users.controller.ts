@@ -5,14 +5,11 @@ import {
   Get,
   Param,
   Patch,
-  Post,
-  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { BasicTokenGuard } from '../auth/guard/basic-token.guard';
-import { BearerTokenGuard } from '../auth/guard/bearer-token.guard';
-import { UsersModel } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { AdminFunctionDto } from './dto/admin-function.dto.';
 
 @Controller('users')
 export class UsersController {
@@ -22,12 +19,13 @@ export class UsersController {
    * 모든 유저 정보 받기(관리자용)
    * 관리자인 경우만 가능하도록 변경
    */
-  @Get()
-  getUsers() {
-    return this.usersService.getAllUser();
+  @Get('all/:id')
+  getUsers(@Param('id') id: string,
+    @Query() query: AdminFunctionDto) {
+    return this.usersService.getAllUser(id, query);
   }
 
-  @Get(':id')
+  @Get('one/:id')
   getUser(@Param('id') id: string) {
     return this.usersService.getUserById(id);
   }

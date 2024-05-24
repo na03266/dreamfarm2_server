@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HASH_ROUNDS } from '../auth/const/auth.const';
 import * as bcrypt from 'bcrypt';
+import { AdminFunctionDto } from './dto/admin-function.dto.';
 
 @Injectable()
 export class UsersService {
@@ -49,20 +50,73 @@ export class UsersService {
   }
 
   /**
-   * 모든 사용자 정보 불러오기
+   * 조건에따라 사용자 목록 불러오기
    */
-  async getAllUser(user?: UsersModel) {
-    if (user.role) {
-      return await this.userRepository.find({
-        where: { role: user.role },
-      });
+  async getAllUser(userId: string, query: AdminFunctionDto) {
+    const user = await this.userRepository.findOne({
+      where: { userId },
+    });
+
+    if (!user) {
+      throw new BadRequestException('사용자를 찾을 수 없습니다.');
     }
 
-    if (user.upperManager) {
-      return await this.userRepository.find({
-        where: { upperManager: user.upperManager },
-      });
+    if (user.role === 'USER') {
+      throw new BadRequestException('접근할 수 없습니다.');
     }
+    const qb = this.userRepository.createQueryBuilder('user');
+
+    /**
+     * role이 ADMIN면 모든 유저 전부 가져오기
+     */
+    if (user.role === 'ADMIN') {
+      // 역할이 관리자인 사람
+      if (query.role) {
+        qb.andWhere('user.role = :role', { role: query.role });
+      }
+
+      // 상위 매니저가 옵션에 주어진 사람
+      if (query.upperUser) {
+        qb.andWhere('user.upperUser = :upperUser', {
+          upperUser: query.upperUser,
+        });
+      }
+      // 키워드가 포함된 사람
+      if (query.keyword) {
+        qb.andWhere('(user.name LIKE :keyword OR user.id LIKE :keyword)', {
+          keyword: `%${query.keyword}%`,
+        });
+      }
+    } else if (user.role === 'STAFF') {
+      // 자기 자신 정보 보기
+      if (userId) {
+        qb.andWhere('user.usedId = :userId', { userId: userId });
+      }
+
+      // STAFF면 upperManager가 자신의 userId인 사용자
+      qb.where('user.upperManager = :upperManager', {
+        upperManager: user.userId,
+      });
+
+      //검색하는 역할이 ADMIN이 아니고 옵션이 있으면
+      if (query.role && query.role !== 'ADMIN') {
+        qb.andWhere('user.role = :role', { role: query.role });
+      }
+
+      // 검색하는 이름이나 아이디의 키워드가 있으면,
+      // 아이디가 비슷하거나 이름이 비슷한 것 찾기
+      if (query.keyword) {
+        qb.andWhere('(user.name LIKE :keyword OR user.id LIKE :keyword)', {
+          keyword: `%${query.keyword}%`,
+        });
+      }
+    }
+    /**
+     * role이 STAFF면
+     * upperManager 가 STAFF의 아이디인 유저를 가져온다
+     */
+
+    return await qb.getMany();
   }
 
   /**
@@ -92,27 +146,22 @@ export class UsersService {
     if (!userId) {
       throw new NotFoundException('존재하는 아이디가 없습니다.');
     }
+
+    if (userId !== userDto.userId) {
+      throw new BadRequestException('아이디는 바꿀 수 없습니다.');
+    }
+
+    if (userDto.password) {
+      userDto.password = await bcrypt.hash(userDto.password, HASH_ROUNDS);
+    }
+
     /**
      * 키 값이 패스워드인 경우 암호화
-     * 키 값이 아이디인 경우 로직에서 제외
+     * 키 값이 아이디(userId)인 경우 로직에서 제외
      */
     for (const [key, value] of Object.entries(userDto)) {
-      const exceptId = value && (key !== 'userId' || 'password');
-      let hashedValue;
-
-      // 키 값이 패스워드인 경우 암호화
-      if (key === 'password') {
-        hashedValue = await bcrypt.hash(value, HASH_ROUNDS);
-      }
-
-      /**
-       * 값이 있고, 키가 userId나 password가 아닌경우 바로 배열에 삽입,
-       * password 인 경우 암호화된 값을 삽입
-       */
-      if (exceptId) {
+      if (key !== 'userId') {
         user[key] = value;
-      } else if (key === 'password') {
-        user[key] = hashedValue;
       }
     }
 
