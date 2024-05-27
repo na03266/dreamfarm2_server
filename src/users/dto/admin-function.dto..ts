@@ -3,6 +3,6 @@ import { RolesEnum } from '../const/roles.const';
 
 export class AdminFunctionDto {
   role?: string;
-  upperUser?: string;
+  superior?: string;
   keyword?: string;
 }

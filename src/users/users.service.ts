@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { HASH_ROUNDS } from '../auth/const/auth.const';
 import * as bcrypt from 'bcrypt';
 import { AdminFunctionDto } from './dto/admin-function.dto.';
+import { RolesEnum } from './const/roles.const';
 
 @Injectable()
 export class UsersService {
@@ -69,52 +70,54 @@ export class UsersService {
     /**
      * role이 ADMIN면 모든 유저 전부 가져오기
      */
-    if (user.role === 'ADMIN') {
+    if (user.role === RolesEnum.ADMIN) {
       // 역할이 관리자인 사람
       if (query.role) {
         qb.andWhere('user.role = :role', { role: query.role });
       }
 
       // 상위 매니저가 옵션에 주어진 사람
-      if (query.upperUser) {
-        qb.andWhere('user.upperUser = :upperUser', {
-          upperUser: query.upperUser,
+      if (query.superior) {
+        qb.andWhere('user.superior = :superior', {
+          superior: query.superior,
         });
       }
       // 키워드가 포함된 사람
       if (query.keyword) {
-        qb.andWhere('(user.name LIKE :keyword OR user.id LIKE :keyword)', {
+        qb.andWhere('user.name LIKE :keyword', {
           keyword: `%${query.keyword}%`,
+        }).orWhere('user.userId Like :idKeyword', {
+          idKeyword: `%${query.keyword}%`,
         });
       }
-    } else if (user.role === 'STAFF') {
-      // 자기 자신 정보 보기
-      if (userId) {
-        qb.andWhere('user.usedId = :userId', { userId: userId });
-      }
 
-      // STAFF면 upperManager가 자신의 userId인 사용자
-      qb.where('user.upperManager = :upperManager', {
-        upperManager: user.userId,
+      /// STAFF 인 경우
+    } else if (user.role === RolesEnum.STAFF) {
+      qb.where('user.role != :role', {
+        role: `ADMIN`,
       });
 
+      if (query.role === RolesEnum.STAFF) {
+        qb.andWhere('user.superior = :upperSuperior', {
+          upperSuperior: user.userId,
+        });
+      }
+
       //검색하는 역할이 ADMIN이 아니고 옵션이 있으면
-      if (query.role && query.role !== 'ADMIN') {
+      if (query.role) {
         qb.andWhere('user.role = :role', { role: query.role });
       }
 
-      // 검색하는 이름이나 아이디의 키워드가 있으면,
-      // 아이디가 비슷하거나 이름이 비슷한 것 찾기
       if (query.keyword) {
-        qb.andWhere('(user.name LIKE :keyword OR user.id LIKE :keyword)', {
+        qb.andWhere('user.name LIKE :keyword', {
           keyword: `%${query.keyword}%`,
+        }).orWhere('user.userId Like :idKeyword', {
+          idKeyword: `%${query.keyword}%`,
         });
       }
     }
-    /**
-     * role이 STAFF면
-     * upperManager 가 STAFF의 아이디인 유저를 가져온다
-     */
+    console.log(qb.getQuery());
+    console.log(qb.getParameters());
 
     return await qb.getMany();
   }
@@ -160,7 +163,7 @@ export class UsersService {
      * 키 값이 아이디(userId)인 경우 로직에서 제외
      */
     for (const [key, value] of Object.entries(userDto)) {
-      if (key !== 'userId') {
+      if (key !== 'userId' && value) {
         user[key] = value;
       }
     }

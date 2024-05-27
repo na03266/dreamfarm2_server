@@ -31,6 +31,7 @@ export class ControllerController {
   ) {
     const token = this.authService.extractTokenFromHeader(rawToken, false);
     const extractedId = await this.authService.extractIdFromToken(token);
+
     const controllerList =
       this.controllerService.getControllersById(extractedId);
 

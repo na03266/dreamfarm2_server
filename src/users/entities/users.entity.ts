@@ -41,5 +41,5 @@ export class UsersModel {
   @Column({
     nullable: true,
   })
-  upperManager?: string;
+  superior?: string;
 }
